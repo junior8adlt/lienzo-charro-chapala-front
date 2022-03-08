@@ -21,7 +21,7 @@ export const Navbar = () => {
             <Link to='/'>Gastos</Link>
           </li>
           <li className='navbar-item'>
-            <Link to='/'>Productos</Link>
+            <Link to='/productos'>Productos</Link>
           </li>
           <li className='navbar-item'>
             <Link to='/'>Barras</Link>
