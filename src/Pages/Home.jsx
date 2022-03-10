@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from '../globalStyles';
+import { Container, Title } from '../globalStyles';
 
 export const Home = () => {
   return (
@@ -14,7 +14,7 @@ export const Home = () => {
           color: '#fff',
         }}
       >
-        <h1>Bienvenidos al sistema de gestión</h1>
+        <Title>Bienvenidos al sistema de gestión</Title>
       </div>
     </Container>
   );

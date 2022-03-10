@@ -44,19 +44,20 @@ export const ProductosTable = ({ editAction }) => {
       title: 'Precio',
       dataIndex: 'price',
       key: 'price',
-      render: (price) => `${price ? '$' + price : 'N/D'}`,
+      render: (price) => `${price !== null ? '$' + price : 'N/D'}`,
     },
     {
       title: 'Precio Proveedor',
       dataIndex: 'factoryPrice',
       key: 'factoryPrice',
-      render: (factoryPrice) => `${factoryPrice ? '$' + factoryPrice : 'N/D'}`,
+      render: (factoryPrice) =>
+        `${factoryPrice !== null ? '$' + factoryPrice : 'N/D'}`,
     },
     {
       title: 'Comisión',
       dataIndex: 'comission',
       key: 'comission',
-      render: (comission) => `${comission ? '$' + comission : 'N/D'}`,
+      render: (comission) => `${comission !== null ? '$' + comission : 'N/D'}`,
     },
     {
       title: 'Action',

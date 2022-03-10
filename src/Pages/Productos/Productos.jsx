@@ -6,7 +6,7 @@ import { ProductosTable } from './Components/ProductosTable';
 export const Productos = () => {
   const [visible, setVisible] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [productSelected, setProductSelected] = useState({});
+  const [productSelected, setProductSelected] = useState(null);
   const editAction = (product) => {
     setIsEdit(true);
     setVisible(true);
@@ -18,6 +18,7 @@ export const Productos = () => {
         visible={visible}
         setVisible={setVisible}
         productSelected={productSelected}
+        setProductSelected={setProductSelected}
         isEdit={isEdit}
         setIsEdit={setIsEdit}
       />

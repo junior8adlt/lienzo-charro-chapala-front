@@ -24,10 +24,10 @@ export const Navbar = () => {
             <Link to='/productos'>Productos</Link>
           </li>
           <li className='navbar-item'>
-            <Link to='/'>Barras</Link>
+            <Link to='/barras'>Barras</Link>
           </li>
           <li className='navbar-item'>
-            <Link to='/'>Inventarios</Link>
+            <Link to='/inventarios'>Inventarios</Link>
           </li>
           <li className='navbar-item'>
             <Link to='/'>Reportes</Link>

@@ -11,6 +11,7 @@ export const ProductosModalForm = ({
   isEdit,
   setIsEdit,
   productSelected,
+  setProductSelected,
 }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
@@ -41,6 +42,7 @@ export const ProductosModalForm = ({
     setVisible(false);
     setIsEdit(false);
     setConfirmLoading(false);
+    setProductSelected(null);
     form.resetFields();
   };
   const onFinish = async ({ name, price, factoryPrice, comission }) => {
