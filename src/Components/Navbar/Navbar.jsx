@@ -18,7 +18,7 @@ export const Navbar = () => {
             <Link to='/'>Ventas</Link>
           </li>
           <li className='navbar-item'>
-            <Link to='/'>Gastos</Link>
+            <Link to='/gastos'>Gastos</Link>
           </li>
           <li className='navbar-item'>
             <Link to='/productos'>Productos</Link>

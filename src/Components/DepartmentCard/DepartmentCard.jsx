@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Popconfirm } from 'antd';
 import { EditFilled, DeleteFilled } from '@ant-design/icons';
 import './DepartmentCard.css';
@@ -31,4 +32,10 @@ export const DepartmentCard = ({ department, deleteAction, editAction }) => {
       </div>
     </div>
   );
+};
+
+DepartmentCard.propTypes = {
+  department: PropTypes.object.isRequired,
+  deleteAction: PropTypes.func.isRequired,
+  editAction: PropTypes.func.isRequired,
 };

@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { DatePicker, Input } from 'antd';
 import styled, { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -32,6 +32,13 @@ export const Title = styled.h1`
   color: #ffffff;
 `;
 
+export const Subtitle = styled.h3`
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #ffffff;
+`;
+
 export const ActionItem = styled.span`
   font-size: 14px;
   font-weight: 600;
@@ -53,7 +60,10 @@ export const CustomButton = styled.button`
   border: none;
   cursor: pointer;
   border: 0;
-
+  &:disabled {
+    background: rgba(33, 203, 243, 0.8);
+    cursor: not-allowed;
+  }
   @media screen and (max-width: 960px) {
     width: 100%;
   }
@@ -66,6 +76,19 @@ export const Header = styled.div`
   margin-bottom: 1rem;
 `;
 
+export const HeaderActions = styled.div`
+  display: flex;
+  align-items: center;
+  width: 50%;
+`;
+
+export const TableActions = styled.div`
+  display: flex;
+  align-items: center;
+  width: 70%;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+`;
 export const CustomInput = styled(Input)`
   font-family: 'Roboto', sans-serif;
   color: #333;
@@ -79,5 +102,12 @@ export const CustomInput = styled(Input)`
   &:focus {
     outline: none;
   }
+`;
+
+export const CustomDatePicker = styled(DatePicker)`
+  width: 300px !important;
+  height: 44px !important;
+  display: flex;
+  align-items: center;
 `;
 export default GlobalStyle;

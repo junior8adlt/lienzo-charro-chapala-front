@@ -5,7 +5,7 @@ import { GET_PRODUCTS } from '../../../Api/Queries';
 import { ActionItem } from '../../../globalStyles';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { DELETE_PRODUCT } from '../../../Api/Mutations';
-
+import PropTypes from 'prop-types';
 const { confirm } = Modal;
 const { Search } = Input;
 
@@ -142,4 +142,8 @@ export const ProductosTable = ({ editAction }) => {
       />
     </>
   );
+};
+
+ProductosTable.propTypes = {
+  editAction: PropTypes.func.isRequired,
 };

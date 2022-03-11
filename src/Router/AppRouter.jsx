@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Navbar } from '../Components/Navbar/Navbar';
 import GlobalStyle from '../globalStyles';
 import { Barras } from '../Pages/Barras/Barras';
+import { Gastos } from '../Pages/Gastos/Gastos';
 import { Home } from '../Pages/Home';
 import { Inventarios } from '../Pages/Inventarios/Inventarios';
 import { Productos } from '../Pages/Productos/Productos';
@@ -16,6 +17,7 @@ export const AppRouter = () => {
         <Route path='/productos' component={Productos} />
         <Route path='/barras' component={Barras} />
         <Route path='/inventarios' component={Inventarios} />
+        <Route path='/gastos' component={Gastos} />
       </Switch>
     </Router>
   );

@@ -10,7 +10,6 @@ export const Inventarios = () => {
   const [visible, setVisible] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [departmentSelected, setDepartmentSelected] = useState(null);
-  const [departmentId, setDepartmentId] = useState(null);
   const { data } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
     variables: { type: 'warehouse' },
   });
@@ -20,14 +19,12 @@ export const Inventarios = () => {
     ],
   });
   const deleteAction = async (id) => {
-    setDepartmentId(id);
     try {
       await deleteDepartment({
         variables: {
           deleteDepartmentId: parseInt(id),
         },
       });
-      setDepartmentId(null);
       Modal.success({
         content: 'Inventario Eliminado',
       });

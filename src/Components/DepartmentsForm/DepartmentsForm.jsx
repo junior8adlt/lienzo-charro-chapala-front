@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Form, Button } from 'antd';
 import { useMutation } from '@apollo/client';
 import { CREATE_DEPARTMENT, UPDATE_DEPARTMENT } from '../../Api/Mutations';
@@ -163,4 +164,14 @@ export const DepartmentsForm = ({
       </Form>
     </Modal>
   );
+};
+
+DepartmentsForm.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  setVisible: PropTypes.func.isRequired,
+  departmentSelected: PropTypes.object,
+  setDepartmentSelected: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool.isRequired,
+  setIsEdit: PropTypes.func.isRequired,
+  isShop: PropTypes.bool.isRequired,
 };
