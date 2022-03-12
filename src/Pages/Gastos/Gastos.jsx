@@ -14,6 +14,7 @@ import {
 } from '../../globalStyles';
 import { Modal } from 'antd';
 import { GastosTable } from './Components/GastosTable';
+import { useHistory } from 'react-router-dom';
 
 export const Gastos = () => {
   const [loading, setLoading] = useState(false);
@@ -21,11 +22,19 @@ export const Gastos = () => {
   const [departments, setDepartments] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [originalPurchases, setOriginalPurchases] = useState([]);
+  const history = useHistory();
   const client = useApolloClient();
 
   const { data: departmentsData } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
     variables: { type: 'warehouse' },
   });
+
+  useEffect(() => {
+    if (!departmentId) {
+      setPurchases([]);
+      setOriginalPurchases([]);
+    }
+  }, [departmentId]);
 
   useEffect(() => {
     if (departmentsData) {
@@ -81,7 +90,12 @@ export const Gastos = () => {
           >
             Buscar Gastos
           </CustomButton>
-          <CustomButton style={{ marginLeft: 20 }}>Crear Gasto</CustomButton>
+          <CustomButton
+            style={{ marginLeft: 20 }}
+            onClick={() => history.push('/gastos/crear')}
+          >
+            Crear Gasto
+          </CustomButton>
         </HeaderActions>
       </Header>
       <GastosTable

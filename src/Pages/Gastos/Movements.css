@@ -1,0 +1,41 @@
+.movements-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+.movements-wrapper .movements-card {
+  width: 70%;
+  background: #fff;
+  padding: 16px;
+  border-radius: 5px;
+  height: 170px;
+  margin-bottom: 1rem;
+}
+
+.movements-wrapper .movements-card .movements-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.movements-wrapper .movements-card .movements-card-header h4 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.movements-wrapper .movements-card p span {
+  font-weight: bold;
+}
+.movements-wrapper .movements-card .movements-card-header span svg {
+  font-size: 1rem;
+  color: red;
+}
+
+.movements-form {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding: 16px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

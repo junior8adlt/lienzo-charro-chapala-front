@@ -1,4 +1,4 @@
-import { DatePicker, Input } from 'antd';
+import { DatePicker, Input, Select } from 'antd';
 import styled, { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -73,7 +73,7 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 `;
 
 export const HeaderActions = styled.div`
@@ -109,5 +109,16 @@ export const CustomDatePicker = styled(DatePicker)`
   height: 44px !important;
   display: flex;
   align-items: center;
+  border-radius: 5px;
+`;
+
+export const CustomSelect = styled(Select)`
+  & > .ant-select-selector {
+    width: ${(props) => (props.fullW ? '100% !important' : '250px !important')};
+    height: 44px !important;
+    display: flex;
+    align-items: center;
+    border-radius: 5px !important;
+  }
 `;
 export default GlobalStyle;

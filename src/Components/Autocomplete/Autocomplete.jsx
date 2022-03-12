@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select } from 'antd';
-import './Autocomplete.css';
-const { Option } = Select;
+import { CustomSelect } from '../../globalStyles';
+const { Option } = CustomSelect;
 
-export const Autocomplete = ({ data, setAutocompleteValue, placeholder }) => {
+export const Autocomplete = ({
+  data,
+  setAutocompleteValue,
+  placeholder,
+  fullW,
+}) => {
   const onChange = (value) => {
     setAutocompleteValue(value);
   };
@@ -19,19 +23,20 @@ export const Autocomplete = ({ data, setAutocompleteValue, placeholder }) => {
     });
   };
   return (
-    <Select
+    <CustomSelect
       showSearch
       placeholder={placeholder ? placeholder : 'Seleccione una opción'}
       optionFilterProp='children'
       onChange={onChange}
       allowClear
+      fullW={fullW}
       className='auto-complete-select'
       filterOption={(input, option) =>
         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }
     >
       {selectOptions()}
-    </Select>
+    </CustomSelect>
   );
 };
 
@@ -39,4 +44,5 @@ Autocomplete.propTypes = {
   data: PropTypes.array.isRequired,
   setAutocompleteValue: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  fullW: PropTypes.bool,
 };
