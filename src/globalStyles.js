@@ -79,7 +79,6 @@ export const Header = styled.div`
 export const HeaderActions = styled.div`
   display: flex;
   align-items: center;
-  width: 50%;
 `;
 
 export const TableActions = styled.div`
