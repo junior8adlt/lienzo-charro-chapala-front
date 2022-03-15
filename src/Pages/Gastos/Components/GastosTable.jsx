@@ -202,6 +202,6 @@ GastosTable.propTypes = {
   purchases: PropTypes.array.isRequired,
   setPurchases: PropTypes.func.isRequired,
   originalPurchases: PropTypes.array.isRequired,
-  departmentId: PropTypes.string.isRequired,
+  departmentId: PropTypes.string,
   loading: PropTypes.bool.isRequired,
 };

@@ -1,9 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import requiredIf from 'react-required-if';
+
 import { Popconfirm } from 'antd';
 import { EditFilled, DeleteFilled } from '@ant-design/icons';
 import './DepartmentCard.css';
-export const DepartmentCard = ({ department, deleteAction, editAction }) => {
+export const DepartmentCard = ({
+  department,
+  deleteAction,
+  editAction,
+  actions,
+  actionButtonOnClick,
+  actionButtonText,
+}) => {
   return (
     <div className='custom-card'>
       <div className='card-header'>
@@ -30,6 +39,11 @@ export const DepartmentCard = ({ department, deleteAction, editAction }) => {
           Responsable: <span>{department.responsable}</span>
         </p>
       </div>
+      {actions && (
+        <div className='card-footer'>
+          <span onClick={actionButtonOnClick}>{actionButtonText}</span>
+        </div>
+      )}
     </div>
   );
 };
@@ -38,4 +52,7 @@ DepartmentCard.propTypes = {
   department: PropTypes.object.isRequired,
   deleteAction: PropTypes.func.isRequired,
   editAction: PropTypes.func.isRequired,
+  actions: PropTypes.bool.isRequired,
+  actionButtonOnClick: requiredIf(PropTypes.func, (props) => props.actions),
+  actionButtonText: requiredIf(PropTypes.string, (props) => props.actions),
 };

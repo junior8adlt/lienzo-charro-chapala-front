@@ -68,6 +68,9 @@ export const Inventarios = () => {
                 department={department}
                 deleteAction={deleteAction}
                 editAction={editDepartment}
+                actions
+                actionButtonText='Ver Stock'
+                actionButtonOnClick={() => console.log('Ver Stock')}
               />
             </Col>
           ))}

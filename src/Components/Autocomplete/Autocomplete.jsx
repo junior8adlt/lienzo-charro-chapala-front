@@ -8,6 +8,7 @@ export const Autocomplete = ({
   setAutocompleteValue,
   placeholder,
   fullW,
+  value,
 }) => {
   const onChange = (value) => {
     setAutocompleteValue(value);
@@ -31,6 +32,7 @@ export const Autocomplete = ({
       allowClear
       fullW={fullW}
       className='auto-complete-select'
+      value={value}
       filterOption={(input, option) =>
         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }

@@ -1,7 +1,7 @@
 .custom-card {
   width: 100%;
   padding: 20px;
-  height: 200px;
+  height: 230px;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -56,4 +56,21 @@
 
 .custom-card .card-body p span {
   font-weight: 700;
+}
+.custom-card .card-footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  transform: translateY(25px);
+}
+.custom-card .card-footer span {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.custom-card .card-footer span:hover {
+  text-decoration: underline;
 }

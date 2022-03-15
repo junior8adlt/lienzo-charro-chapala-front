@@ -1,6 +1,7 @@
 import { Col, Row } from 'antd';
 import React, { useState, useEffect } from 'react';
-import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
+import dayjs from 'dayjs';
+import { useHistory } from 'react-router-dom';
 import {
   Container,
   CustomButton,
@@ -10,9 +11,9 @@ import {
   HeaderActions,
   Title,
 } from '../../globalStyles';
-import { Form } from 'antd';
-import { Modal } from 'antd';
-import './Movements.css';
+import { Modal, Form } from 'antd';
+import { MovementsCard } from '../../Components/MovementsCard/MovementsCard';
+import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   GET_DEPARTMENTS_BY_TYPE,
@@ -20,10 +21,10 @@ import {
   GET_PRODUCTS,
 } from '../../Api/Queries';
 import { generateUUID } from '../../utils/generateUUID';
-import { MovementsCard } from '../../Components/MovementsCard/MovementsCard';
 import { CREATE_MOVEMENT } from '../../Api/Mutations';
-import { useHistory } from 'react-router-dom';
-import dayjs from 'dayjs';
+
+import './Movements.css';
+
 export const CrearGasto = () => {
   const [warehouseId, setWarehouseId] = useState(null);
   const [dateValue, setDateValue] = useState(null);

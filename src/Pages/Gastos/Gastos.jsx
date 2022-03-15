@@ -5,6 +5,10 @@ import {
   GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
 } from '../../Api/Queries';
 import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
+import { Modal } from 'antd';
+import { GastosTable } from './Components/GastosTable';
+import { useHistory } from 'react-router-dom';
+import { EditGastosModalForm } from './Components/EditGastosModalForm';
 import {
   Container,
   CustomButton,
@@ -12,15 +16,14 @@ import {
   HeaderActions,
   Title,
 } from '../../globalStyles';
-import { Modal } from 'antd';
-import { GastosTable } from './Components/GastosTable';
-import { useHistory } from 'react-router-dom';
 
 export const Gastos = () => {
   const [loading, setLoading] = useState(false);
   const [departmentId, setDepartmentId] = useState(null);
   const [departments, setDepartments] = useState([]);
   const [purchases, setPurchases] = useState([]);
+  const [purchaseSelected, setPurchaseSelected] = useState(null);
+  const [visible, setVisible] = useState(false);
   const [originalPurchases, setOriginalPurchases] = useState([]);
   const history = useHistory();
   const client = useApolloClient();
@@ -66,14 +69,21 @@ export const Gastos = () => {
     }
   };
   const editAction = (purchase) => {
-    // setIsEdit(true);
-    // setVisible(true);
-    // setProductSelected(product);
-    console.log(purchase, 'purchase');
+    setVisible(true);
+    setPurchaseSelected(purchase);
   };
 
   return (
     <Container>
+      <EditGastosModalForm
+        visible={visible}
+        setVisible={setVisible}
+        purchaseSelected={purchaseSelected}
+        setPurchaseSelected={setPurchaseSelected}
+        purchases={purchases}
+        setPurchases={setPurchases}
+        setOriginalPurchases={setOriginalPurchases}
+      />
       <Header>
         <Title>Gastos</Title>
         <HeaderActions>

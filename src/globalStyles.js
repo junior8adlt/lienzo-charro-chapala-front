@@ -104,7 +104,7 @@ export const CustomInput = styled(Input)`
 `;
 
 export const CustomDatePicker = styled(DatePicker)`
-  width: 300px !important;
+  width: ${(props) => (props.fullW ? '100% !important' : '300px !important')};
   height: 44px !important;
   display: flex;
   align-items: center;
