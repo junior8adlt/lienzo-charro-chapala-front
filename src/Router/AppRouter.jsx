@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { CreateMovement } from '../Components/CreateMovement/CreateMovement';
 import { Navbar } from '../Components/Navbar/Navbar';
 import GlobalStyle from '../globalStyles';
 import { Barras } from '../Pages/Barras/Barras';
-import { CrearGasto } from '../Pages/Gastos/CrearGasto';
 import { Gastos } from '../Pages/Gastos/Gastos';
 import { Home } from '../Pages/Home';
 import { Inventarios } from '../Pages/Inventarios/Inventarios';
 import { Productos } from '../Pages/Productos/Productos';
+import { Ventas } from '../Pages/Ventas/Ventas';
 
 export const AppRouter = () => {
   return (
@@ -19,7 +20,15 @@ export const AppRouter = () => {
         <Route path='/barras' component={Barras} />
         <Route path='/inventarios' component={Inventarios} />
         <Route exact path='/gastos' component={Gastos} />
-        <Route path='/gastos/crear' component={CrearGasto} />
+        <Route
+          path='/gastos/crear'
+          render={(props) => <CreateMovement {...props} isSale={false} />}
+        />
+        <Route exact path='/ventas' component={Ventas} />
+        <Route
+          path='/ventas/crear'
+          render={(props) => <CreateMovement {...props} isSale={true} />}
+        />
       </Switch>
     </Router>
   );

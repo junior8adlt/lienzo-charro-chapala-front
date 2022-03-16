@@ -5,20 +5,21 @@ import PropTypes from 'prop-types';
 import {
   GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
   GET_PRODUCTS,
-} from '../../../Api/Queries';
-import { CustomInput } from '../../../globalStyles';
+} from '../../Api/Queries';
+import { CustomInput } from '../../globalStyles';
 import dayjs from 'dayjs';
-import { Autocomplete } from '../../../Components/Autocomplete/Autocomplete';
-import { UPDATE_MOVEMENT } from '../../../Api/Mutations';
+import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
+import { UPDATE_MOVEMENT } from '../../Api/Mutations';
 
-export const EditGastosModalForm = ({
+export const MovementsForm = ({
   visible,
   setVisible,
-  purchaseSelected,
-  setPurchaseSelected,
-  purchases,
-  setPurchases,
-  setOriginalPurchases,
+  movementSelected,
+  setMovementSelected,
+  movements,
+  setMovements,
+  setOriginalMovements,
+  isSale,
 }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [productId, setProductId] = useState(null);
@@ -35,7 +36,7 @@ export const EditGastosModalForm = ({
         query: GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
         variables: {
           departmentId: parseInt(warehouseId),
-          departmentType: 'PURCHASE',
+          departmentType: isSale ? 'SALE' : 'PURCHASE',
         },
       },
     ],
@@ -48,19 +49,19 @@ export const EditGastosModalForm = ({
   }, [dataProducts]);
 
   useEffect(() => {
-    if (purchaseSelected) {
-      form.setFieldsValue(purchaseSelected);
-      setProductId(purchaseSelected.product.id);
-      setWarehouseId(purchaseSelected.department.id);
+    if (movementSelected) {
+      form.setFieldsValue(movementSelected);
+      setProductId(movementSelected.product.id);
+      setWarehouseId(movementSelected.department.id);
     }
-  }, [purchaseSelected]);
+  }, [movementSelected]);
 
   const handleOk = () => customRef.current.click();
 
   const handleCancel = () => {
     setVisible(false);
     setConfirmLoading(false);
-    setPurchaseSelected(null);
+    setMovementSelected(null);
     form.resetFields();
   };
   const onFinish = async ({ description, amount, total }) => {
@@ -68,37 +69,37 @@ export const EditGastosModalForm = ({
     try {
       const { data } = await updateMovement({
         variables: {
-          updateMovementId: parseInt(purchaseSelected.id),
+          updateMovementId: parseInt(movementSelected.id),
           input: {
             description,
             amount: parseInt(amount),
             total: parseInt(total),
-            type: 'PURCHASE',
+            type: isSale ? 'SALE' : 'PURCHASE',
             departmentId: parseInt(warehouseId),
             productId: parseInt(productId),
-            date: dayjs(purchaseSelected.date).format('YYYY-MM-DD'),
+            date: dayjs(movementSelected.date).format('YYYY-MM-DD'),
           },
         },
       });
       if (data.updateMovement) {
         Modal.success({
-          content: 'Gasto Actualizado',
+          content: 'Movimiento Actualizado',
         });
-        const newPurchases = purchases.map((purchase) => {
-          if (purchase.id === purchaseSelected.id) {
+        const newMovements = movements.map((movement) => {
+          if (movement.id === movementSelected.id) {
             return {
-              ...purchase,
+              ...movement,
               description,
               amount: parseInt(amount),
               total: parseInt(total),
               product: returnProductInfo(productId),
             };
           } else {
-            return purchase;
+            return movement;
           }
         });
-        setPurchases(newPurchases);
-        setOriginalPurchases(newPurchases);
+        setMovements(newMovements);
+        setOriginalMovements(newMovements);
         handleCancel();
       }
     } catch (error) {
@@ -133,7 +134,7 @@ export const EditGastosModalForm = ({
 
   return (
     <Modal
-      title='Editar Gasto'
+      title='Editar Movimiento'
       visible={visible}
       onOk={handleOk}
       confirmLoading={confirmLoading}
@@ -150,7 +151,7 @@ export const EditGastosModalForm = ({
         form={form}
       >
         <Form.Item
-          label='Motivo del gasto'
+          label='Motivo'
           name='description'
           rules={[{ required: true, message: 'El motivo es requerido' }]}
         >
@@ -196,12 +197,13 @@ export const EditGastosModalForm = ({
   );
 };
 
-EditGastosModalForm.propTypes = {
+MovementsForm.propTypes = {
   visible: PropTypes.bool.isRequired,
   setVisible: PropTypes.func.isRequired,
-  purchaseSelected: PropTypes.object,
-  setPurchaseSelected: PropTypes.func.isRequired,
-  purchases: PropTypes.array.isRequired,
-  setPurchases: PropTypes.func.isRequired,
-  setOriginalPurchases: PropTypes.func.isRequired,
+  movementSelected: PropTypes.object,
+  setMovementSelected: PropTypes.func.isRequired,
+  movements: PropTypes.array.isRequired,
+  setMovements: PropTypes.func.isRequired,
+  setOriginalMovements: PropTypes.func.isRequired,
+  isSale: PropTypes.bool.isRequired,
 };

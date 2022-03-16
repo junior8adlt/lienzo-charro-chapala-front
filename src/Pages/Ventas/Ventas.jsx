@@ -1,5 +1,8 @@
 import { useApolloClient, useQuery } from '@apollo/client';
 import React, { useState, useEffect } from 'react';
+import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
+import { Modal } from 'antd';
+import { MovementsTable } from '../../Components/MovementsTable/MovementsTable';
 import {
   Container,
   CustomButton,
@@ -7,9 +10,6 @@ import {
   HeaderActions,
   Title,
 } from '../../globalStyles';
-import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
-import { Modal } from 'antd';
-import { MovementsTable } from '../../Components/MovementsTable/MovementsTable';
 import { MovementsForm } from '../../Components/MovementsForm/MovementsForm';
 import { useHistory } from 'react-router-dom';
 import {
@@ -17,25 +17,25 @@ import {
   GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
 } from '../../Api/Queries';
 
-export const Gastos = () => {
+export const Ventas = () => {
   const [loading, setLoading] = useState(false);
   const [departmentId, setDepartmentId] = useState(null);
   const [departments, setDepartments] = useState([]);
-  const [purchases, setPurchases] = useState([]);
-  const [purchaseSelected, setPurchaseSelected] = useState(null);
+  const [sales, setSales] = useState([]);
+  const [originalSales, setOriginalSales] = useState([]);
+  const [saleSelected, setSaleSelected] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [originalPurchases, setOriginalPurchases] = useState([]);
   const history = useHistory();
   const client = useApolloClient();
 
   const { data: departmentsData } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
-    variables: { type: 'warehouse' },
+    variables: { type: 'shop' },
   });
 
   useEffect(() => {
     if (!departmentId) {
-      setPurchases([]);
-      setOriginalPurchases([]);
+      setSales([]);
+      setOriginalSales([]);
     }
   }, [departmentId]);
 
@@ -52,12 +52,12 @@ export const Gastos = () => {
         query: GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
         variables: {
           departmentId: parseInt(departmentId),
-          departmentType: 'PURCHASE',
+          departmentType: 'SALE',
         },
       });
       if (data) {
-        setPurchases(data.getMovementsByDepartmentAndType);
-        setOriginalPurchases(data.getMovementsByDepartmentAndType);
+        setSales(data.getMovementsByDepartmentAndType);
+        setOriginalSales(data.getMovementsByDepartmentAndType);
         setLoading(false);
       }
     } catch (error) {
@@ -70,7 +70,7 @@ export const Gastos = () => {
   };
   const editAction = (purchase) => {
     setVisible(true);
-    setPurchaseSelected(purchase);
+    setSaleSelected(purchase);
   };
 
   return (
@@ -78,20 +78,20 @@ export const Gastos = () => {
       <MovementsForm
         visible={visible}
         setVisible={setVisible}
-        movementSelected={purchaseSelected}
-        setMovementSelected={setPurchaseSelected}
-        movements={purchases}
-        setMovements={setPurchases}
-        setOriginalMovements={setOriginalPurchases}
-        isSale={false}
+        movementSelected={saleSelected}
+        setMovementSelected={setSaleSelected}
+        movements={sales}
+        setMovements={setSales}
+        setOriginalMovements={setOriginalSales}
+        isSale={true}
       />
       <Header>
-        <Title>Gastos</Title>
+        <Title>Ventas</Title>
         <HeaderActions>
           <Autocomplete
             data={departments}
             setAutocompleteValue={setDepartmentId}
-            placeholder='Selecciona un inventario'
+            placeholder='Selecciona una barra'
           />
           <CustomButton
             style={{ marginLeft: 20 }}
@@ -99,24 +99,24 @@ export const Gastos = () => {
             loading={loading}
             onClick={searchMovementsByDepartment}
           >
-            Buscar Gastos
+            Buscar Ventas
           </CustomButton>
           <CustomButton
             style={{ marginLeft: 20 }}
-            onClick={() => history.push('/gastos/crear')}
+            onClick={() => history.push('/ventas/crear')}
           >
-            Crear Gastos
+            Crear Ventas
           </CustomButton>
         </HeaderActions>
       </Header>
       <MovementsTable
         editAction={editAction}
-        movements={purchases}
-        setMovements={setPurchases}
-        originalMovements={originalPurchases}
+        movements={sales}
+        setMovements={setSales}
+        originalMovements={originalSales}
         departmentId={departmentId}
         loading={loading}
-        isSales={false}
+        isSales={true}
       />
     </Container>
   );

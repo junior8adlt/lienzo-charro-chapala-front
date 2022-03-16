@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { DeleteFilled } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 
-import '../../Pages/Gastos/Movements.css';
+import '../CreateMovement/Movements.css';
 export const MovementsCard = ({
   movement,
   onDelete,
   product,
-  isTransfer,
-  departmentFrom,
-  departmentTo,
+  isSale,
+  department,
 }) => {
   return (
     <div className='movements-card'>
@@ -25,10 +24,9 @@ export const MovementsCard = ({
           <DeleteFilled style={{ marginLeft: 10 }} />
         </Popconfirm>
       </div>
-      {isTransfer && (
+      {isSale && (
         <p>
-          Del departamento <span>{departmentFrom.name}</span> al{' '}
-          <span>{departmentTo.name}</span>
+          Barra <span>{department}</span>
         </p>
       )}
       <p>
@@ -48,7 +46,6 @@ MovementsCard.propTypes = {
   movement: PropTypes.object.isRequired,
   onDelete: PropTypes.func.isRequired,
   product: PropTypes.object.isRequired,
-  isTransfer: PropTypes.bool.isRequired,
-  departmentFrom: PropTypes.object,
-  departmentTo: PropTypes.object,
+  isSale: PropTypes.bool.isRequired,
+  department: PropTypes.string,
 };

@@ -15,7 +15,7 @@ export const Navbar = () => {
             <Link to='/'>Transferencias</Link>
           </li>
           <li className='navbar-item'>
-            <Link to='/'>Ventas</Link>
+            <Link to='/ventas'>Ventas</Link>
           </li>
           <li className='navbar-item'>
             <Link to='/gastos'>Gastos</Link>

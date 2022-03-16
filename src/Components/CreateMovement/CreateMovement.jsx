@@ -1,5 +1,6 @@
-import { Col, Row } from 'antd';
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Col, Row } from 'antd';
 import dayjs from 'dayjs';
 import { useHistory } from 'react-router-dom';
 import {
@@ -25,19 +26,19 @@ import { CREATE_MOVEMENT } from '../../Api/Mutations';
 
 import './Movements.css';
 
-export const CrearGasto = () => {
+export const CreateMovement = ({ isSale }) => {
   const [warehouseId, setWarehouseId] = useState(null);
   const [dateValue, setDateValue] = useState(null);
   const [productId, setProductId] = useState(null);
   const [productsArray, setProductsArray] = useState([]);
   const [departmentsArray, setDepartmentsArray] = useState([]);
-  const [purchases, setPurchases] = useState([]);
+  const [movements, setMovements] = useState([]);
   const history = useHistory();
   const [form] = Form.useForm();
 
   const { data: dataProducts } = useQuery(GET_PRODUCTS);
   const { data: departmentsData } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
-    variables: { type: 'warehouse' },
+    variables: { type: isSale ? 'shop' : 'warehouse' },
   });
   const [createMovements] = useMutation(CREATE_MOVEMENT);
 
@@ -54,8 +55,8 @@ export const CrearGasto = () => {
   }, [departmentsData]);
 
   const onFinish = async ({ description, amount, total }) => {
-    setPurchases([
-      ...purchases,
+    setMovements([
+      ...movements,
       {
         id: generateUUID(),
         description,
@@ -82,52 +83,61 @@ export const CrearGasto = () => {
     const product = productsArray.find((product) => product.id === idProduct);
     return product;
   };
-  const removePurchase = (id) => {
-    const newPurchases = purchases.filter((purchase) => purchase.id !== id);
-    setPurchases(newPurchases);
+
+  const returnBarraInfo = (idDepartment) => {
+    const department = departmentsArray.find(
+      (department) => department.id === idDepartment
+    );
+    return department;
+  };
+  const removeMovement = (id) => {
+    const newMovements = movements.filter((movement) => movement.id !== id);
+    setMovements(newMovements);
   };
 
   const calculateTotal = (e) => {
     const amount = e.target.value;
     if (productId && amount) {
       const product = returnProductInfo(productId);
-      const total = parseInt(product.factoryPrice) * parseInt(amount);
+      const total =
+        parseInt(isSale ? product.price : product.factoryPrice) *
+        parseInt(amount);
       form.setFieldsValue({ total });
     }
   };
 
-  const createPurchases = async () => {
+  const createAllMovements = async () => {
     try {
-      const purchaseWithOutId = purchases.map((purchase) => {
+      const movementWithOutId = movements.map((movement) => {
         return {
-          description: purchase.description,
-          amount: parseInt(purchase.amount),
-          total: parseInt(purchase.total),
-          productId: parseInt(purchase.productId),
-          departmentId: parseInt(purchase.departmentId),
-          type: 'PURCHASE',
-          date: dayjs(dateValue).format('YYYY-MM-DD'),
+          description: movement.description,
+          amount: parseInt(movement.amount),
+          total: parseInt(movement.total),
+          productId: parseInt(movement.productId),
+          departmentId: parseInt(movement.departmentId),
+          type: isSale ? 'SALE' : 'PURCHASE',
+          date: dateValue,
         };
       });
       const { data } = await createMovements({
         variables: {
-          input: purchaseWithOutId,
+          input: movementWithOutId,
         },
         refetchQueries: [
           {
             query: GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
             variables: {
               departmentId: parseInt(warehouseId),
-              departmentType: 'PURCHASE',
+              departmentType: isSale ? 'SALE' : 'PURCHASE',
             },
           },
         ],
       });
       if (data.createMovements) {
         Modal.success({
-          content: 'Gasto Creado',
+          content: 'Movimientos Creado',
         });
-        history.push('/gastos');
+        history.push(isSale ? '/ventas' : '/gastos');
       }
     } catch (error) {
       Modal.error({
@@ -136,20 +146,21 @@ export const CrearGasto = () => {
       });
     }
   };
-
   return (
     <Container>
       <Header>
-        <Title>Crear Gastos</Title>
+        <Title>{isSale ? 'Crear Ventas' : 'Crear Gastos'}</Title>
         <HeaderActions style={{ justifyContent: 'flex-end' }}>
           <Autocomplete
             data={departmentsArray}
-            placeholder='Seleccione un inventario'
+            placeholder={
+              isSale ? 'Seleccione una barra' : 'Seleccione un inventario'
+            }
             setAutocompleteValue={setWarehouseId}
           />
           <CustomDatePicker
             onChange={onChangeDate}
-            format='DD/MM/YYYY'
+            format='YYYY-MM-DD'
             style={{ marginLeft: '20px' }}
             placeholder='Selecciona una fecha'
           />
@@ -158,13 +169,14 @@ export const CrearGasto = () => {
       <Row>
         <Col span={12}>
           <div className='movements-wrapper'>
-            {purchases.map((purchase) => (
+            {movements.map((movement) => (
               <MovementsCard
-                key={purchase.id}
-                movement={purchase}
-                onDelete={removePurchase}
-                product={returnProductInfo(purchase.productId)}
-                isTransfer={false}
+                key={movement.id}
+                movement={movement}
+                onDelete={removeMovement}
+                product={returnProductInfo(movement.productId)}
+                isSale={isSale}
+                department={returnBarraInfo(movement.departmentId).name}
               />
             ))}
           </div>
@@ -180,7 +192,7 @@ export const CrearGasto = () => {
               form={form}
             >
               <Form.Item
-                label='Motivo del gasto'
+                label='Motivo'
                 name='description'
                 rules={[{ required: true, message: 'El motivo es requerido' }]}
               >
@@ -221,7 +233,7 @@ export const CrearGasto = () => {
                   htmlType='submit'
                   disabled={!warehouseId || !dateValue || !productId}
                 >
-                  Agregar gasto
+                  {isSale ? 'Agregar venta' : 'Agregar gasto'}
                 </CustomButton>
               </Form.Item>
             </Form>
@@ -233,12 +245,16 @@ export const CrearGasto = () => {
           style={{
             marginTop: '3rem',
           }}
-          onClick={createPurchases}
-          disabled={!purchases.length}
+          onClick={createAllMovements}
+          disabled={!movements.length}
         >
-          Crear Gastos
+          {isSale ? 'Crear ventas' : 'Crear gastos'}
         </CustomButton>
       </Row>
     </Container>
   );
+};
+
+CreateMovement.propTypes = {
+  isSale: PropTypes.bool.isRequired,
 };

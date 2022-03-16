@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
 import { Table, Space, Modal, Input, Row, Button } from 'antd';
 import { useMutation } from '@apollo/client';
-import { GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE } from '../../../Api/Queries';
+import { GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE } from '../../Api/Queries';
 import {
   ActionItem,
   CustomDatePicker,
   Subtitle,
   TableActions,
-} from '../../../globalStyles';
+} from '../../globalStyles';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { DELETE_MOVEMENT } from '../../../Api/Mutations';
+import { DELETE_MOVEMENT } from '../../Api/Mutations';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 const { confirm } = Modal;
 const { Search } = Input;
 
-export const GastosTable = ({
+export const MovementsTable = ({
   editAction,
-  purchases,
-  setPurchases,
-  originalPurchases,
+  movements,
+  setMovements,
+  originalMovements,
   departmentId,
   loading,
+  isSale,
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [dateFilterValue, setDateFilterValue] = useState(null);
@@ -31,24 +32,24 @@ export const GastosTable = ({
         query: GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
         variables: {
           departmentId: parseInt(departmentId),
-          departmentType: 'PURCHASE',
+          departmentType: isSale ? 'SALE' : 'PURCHASE',
         },
       },
     ],
   });
   const columns = [
     {
-      title: 'Motivo del gasto',
+      title: 'Motivo',
       dataIndex: 'description',
       key: 'description',
     },
     {
-      title: 'Producto Comprado',
+      title: 'Producto',
       dataIndex: ['product', 'name'],
       key: 'product',
     },
     {
-      title: 'Cantidad comprada',
+      title: 'Cantidad',
       dataIndex: 'amount',
       key: 'amnount',
     },
@@ -94,15 +95,15 @@ export const GastosTable = ({
 
   const onSearch = (value) => {
     setSearchValue(value);
-    const filteredPurchases = originalPurchases.filter((purchase) =>
-      purchase.description.toLowerCase().includes(value.toLowerCase())
+    const filteredMovements = originalMovements.filter((movement) =>
+      movement.description.toLowerCase().includes(value.toLowerCase())
     );
-    setPurchases(filteredPurchases);
+    setMovements(filteredMovements);
   };
 
   const deleteAction = (record) => {
     confirm({
-      title: 'Estás seguro de eliminar este gasto?',
+      title: 'Estás seguro de eliminar este movimiento?',
       icon: <ExclamationCircleOutlined />,
       content: 'Esta acción no se puede deshacer',
       okText: 'Sí',
@@ -114,20 +115,20 @@ export const GastosTable = ({
       onCancel() {},
     });
   };
-  const deleteMutationAction = async (idPurchase) => {
+  const deleteMutationAction = async (idMovement) => {
     try {
       await deleteMovement({
         variables: {
-          deleteMovementId: parseInt(idPurchase),
+          deleteMovementId: parseInt(idMovement),
         },
       });
       Modal.success({
-        content: 'Gasto Eliminado',
+        content: 'Movimiento Eliminado',
       });
-      const filterPurchases = purchases.filter(
-        (purchase) => +purchase.id !== +idPurchase
+      const filterMovements = movements.filter(
+        (movement) => +movement.id !== +idMovement
       );
-      setPurchases(filterPurchases);
+      setMovements(filterMovements);
     } catch (error) {
       Modal.error({
         title: 'Error',
@@ -139,21 +140,21 @@ export const GastosTable = ({
   const onChangeDate = (date, dateString) => {
     setDateFilterValue(dateString);
     if (!dateString) {
-      setPurchases(originalPurchases);
+      setMovements(originalMovements);
       return;
     }
   };
 
   const searchByDate = () => {
     if (dateFilterValue) {
-      const newPurchases = originalPurchases.filter(
-        (purchase) =>
-          dayjs(purchase.date).format('DD/MM/YYYY') === dateFilterValue
+      const newPurchases = originalMovements.filter(
+        (movement) =>
+          dayjs(movement.date).format('DD/MM/YYYY') === dateFilterValue
       );
-      setPurchases(newPurchases);
+      setMovements(newPurchases);
       return;
     }
-    setPurchases(originalPurchases);
+    setMovements(originalMovements);
   };
 
   return (
@@ -188,7 +189,7 @@ export const GastosTable = ({
       </Row>
       <Table
         columns={columns}
-        dataSource={purchases}
+        dataSource={movements}
         loading={loading}
         pagination={{ pageSize: 10 }}
         rowKey='id'
@@ -197,11 +198,12 @@ export const GastosTable = ({
   );
 };
 
-GastosTable.propTypes = {
+MovementsTable.propTypes = {
   editAction: PropTypes.func.isRequired,
-  purchases: PropTypes.array.isRequired,
-  setPurchases: PropTypes.func.isRequired,
-  originalPurchases: PropTypes.array.isRequired,
+  movements: PropTypes.array.isRequired,
+  setMovements: PropTypes.func.isRequired,
+  originalMovements: PropTypes.array.isRequired,
   departmentId: PropTypes.string,
   loading: PropTypes.bool.isRequired,
+  isSales: PropTypes.bool.isRequired,
 };
