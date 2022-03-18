@@ -12,7 +12,7 @@ export const Navbar = () => {
         </Link>
         <ul className='navbar-items'>
           <li className='navbar-item'>
-            <Link to='/'>Transferencias</Link>
+            <Link to='/transferencias'>Transferencias</Link>
           </li>
           <li className='navbar-item'>
             <Link to='/ventas'>Ventas</Link>

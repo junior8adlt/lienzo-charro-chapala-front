@@ -7,6 +7,7 @@ import { Gastos } from '../Pages/Gastos/Gastos';
 import { Home } from '../Pages/Home';
 import { Inventarios } from '../Pages/Inventarios/Inventarios';
 import { Productos } from '../Pages/Productos/Productos';
+import { Transferencias } from '../Pages/Transferencias/Transferencias';
 import { Ventas } from '../Pages/Ventas/Ventas';
 
 export const AppRouter = () => {
@@ -29,6 +30,7 @@ export const AppRouter = () => {
           path='/ventas/crear'
           render={(props) => <CreateMovement {...props} isSale={true} />}
         />
+        <Route exact path='/transferencias' component={Transferencias} />
       </Switch>
     </Router>
   );
