@@ -118,6 +118,9 @@ export const CustomSelect = styled(Select)`
     display: flex;
     align-items: center;
     border-radius: 5px !important;
+    span input {
+      height: 100% !important;
+    }
   }
 `;
 export default GlobalStyle;

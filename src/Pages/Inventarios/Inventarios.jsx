@@ -6,10 +6,13 @@ import { useMutation, useQuery } from '@apollo/client';
 import { DepartmentCard } from '../../Components/DepartmentCard/DepartmentCard';
 import { DELETE_DEPARTMENT } from '../../Api/Mutations';
 import { DepartmentsForm } from '../../Components/DepartmentsForm/DepartmentsForm';
+import { useHistory } from 'react-router-dom';
+
 export const Inventarios = () => {
   const [visible, setVisible] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [departmentSelected, setDepartmentSelected] = useState(null);
+  const history = useHistory();
   const { data } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
     variables: { type: 'warehouse' },
   });
@@ -69,8 +72,10 @@ export const Inventarios = () => {
                 deleteAction={deleteAction}
                 editAction={editDepartment}
                 actions
-                actionButtonText='Ver Stock'
-                actionButtonOnClick={() => console.log('Ver Stock')}
+                actionButtonText='Ver Inventario'
+                actionButtonOnClick={() =>
+                  history.push(`/inventarios/detalles/${department.id}`)
+                }
               />
             </Col>
           ))}

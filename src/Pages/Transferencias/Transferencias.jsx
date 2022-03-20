@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from '@apollo/client';
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   GET_ALL_DEPARTMENTS,
   GET_TRANSFERS_BY_DEPARTMENT_AND_TYPE,
@@ -24,6 +25,7 @@ export const Transferencias = () => {
   const [transfers, setTransfers] = useState([]);
   const [originalTransfers, setOriginalTransfers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
   const client = useApolloClient();
   const { data: departmentsData } = useQuery(GET_ALL_DEPARTMENTS);
 
@@ -98,7 +100,7 @@ export const Transferencias = () => {
           </CustomButton>
           <CustomButton
             style={{ marginLeft: 20 }}
-            onClick={() => history.push('/gastos/crear')}
+            onClick={() => history.push('/transferencias/crear')}
           >
             Crear Transferencias
           </CustomButton>
@@ -106,6 +108,7 @@ export const Transferencias = () => {
       </Header>
       <TransferenciasTable
         transfers={transfers}
+        setTransfers={setTransfers}
         originalTransfers={originalTransfers}
         loading={loading}
         editAction={editAction}

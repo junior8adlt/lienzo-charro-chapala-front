@@ -2,6 +2,22 @@
   display: flex;
   flex-direction: column;
   padding: 16px;
+  height: 500px;
+  overflow-y: scroll;
+  width: 90%;
+}
+.movements-wrapper::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+}
+
+.movements-wrapper::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f5f5f5;
+}
+
+.movements-wrapper::-webkit-scrollbar-thumb {
+  background-color: #1976d2;
 }
 .movements-wrapper .movements-card {
   width: 70%;
@@ -31,7 +47,7 @@
 
 .movements-form {
   width: 100%;
-  height: 100%;
+  height: auto;
   background: #fff;
   padding: 16px;
   border-radius: 5px;

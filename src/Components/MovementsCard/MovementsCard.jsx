@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DeleteFilled } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
+import requiredIf from 'react-required-if';
 
 import '../CreateMovement/Movements.css';
 export const MovementsCard = ({
@@ -10,6 +11,9 @@ export const MovementsCard = ({
   product,
   isSale,
   department,
+  isTransfer,
+  departmentFrom,
+  departmentTo,
 }) => {
   return (
     <div className='movements-card'>
@@ -29,15 +33,32 @@ export const MovementsCard = ({
           Barra <span>{department}</span>
         </p>
       )}
-      <p>
-        Producto: <span>{product.name}</span>
-      </p>
-      <p>
-        Cantidad: <span>{movement.amount}</span>
-      </p>
-      <p>
-        Total: <span>${movement.total}</span>
-      </p>
+      {isTransfer && (
+        <>
+          <p>
+            Barra de origen <span>{departmentFrom}</span>
+          </p>
+          <p>
+            Barra de destino <span>{departmentTo}</span>
+          </p>
+        </>
+      )}
+      {product && (
+        <p>
+          Producto: <span>{product.name}</span>
+        </p>
+      )}
+      {movement && movement.amount && (
+        <p>
+          Cantidad: <span>{movement.amount}</span>
+        </p>
+      )}
+
+      {movement && movement.total && (
+        <p>
+          Total: <span>${movement.total}</span>
+        </p>
+      )}
     </div>
   );
 };
@@ -48,4 +69,7 @@ MovementsCard.propTypes = {
   product: PropTypes.object.isRequired,
   isSale: PropTypes.bool.isRequired,
   department: PropTypes.string,
+  isTransfer: PropTypes.bool,
+  departmentFrom: requiredIf(PropTypes.string, (props) => props.isTransfer),
+  departmentTo: requiredIf(PropTypes.string, (props) => props.isTransfer),
 };

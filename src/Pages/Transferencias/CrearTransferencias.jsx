@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Col, Row } from 'antd';
 import { useHistory } from 'react-router-dom';
 import {
@@ -7,7 +6,6 @@ import {
   CustomButton,
   CustomDatePicker,
   CustomInput,
-  CustomSelect,
   Header,
   HeaderActions,
   Title,
@@ -17,31 +15,29 @@ import { MovementsCard } from '../../Components/MovementsCard/MovementsCard';
 import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
 import { useMutation, useQuery } from '@apollo/client';
 import {
-  GET_DEPARTMENTS_BY_TYPE,
-  GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
+  GET_ALL_DEPARTMENTS,
   GET_PRODUCTS,
+  GET_TRANSFERS_BY_DEPARTMENT_AND_TYPE,
 } from '../../Api/Queries';
+import { CREATE_TRANSFER } from '../../Api/Mutations';
 import { generateUUID } from '../../utils/generateUUID';
-import { CREATE_MOVEMENT } from '../../Api/Mutations';
 
-import './Movements.css';
-const { Option } = CustomSelect;
+import '../../Components/CreateMovement/Movements.css';
 
-export const CreateMovement = ({ isSale }) => {
-  const [warehouseId, setWarehouseId] = useState(null);
+export const CrearTransferencias = () => {
+  const [transfers, setTransfers] = useState([]);
+  const [departmentFrom, setDepartmentFrom] = useState(null);
+  const [departmentTo, setDepartmentTo] = useState(null);
   const [dateValue, setDateValue] = useState(null);
   const [productId, setProductId] = useState(null);
   const [productsArray, setProductsArray] = useState([]);
   const [departmentsArray, setDepartmentsArray] = useState([]);
-  const [movements, setMovements] = useState([]);
   const history = useHistory();
   const [form] = Form.useForm();
 
   const { data: dataProducts } = useQuery(GET_PRODUCTS);
-  const { data: departmentsData } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
-    variables: { type: isSale ? 'shop' : 'warehouse' },
-  });
-  const [createMovements] = useMutation(CREATE_MOVEMENT);
+  const { data: departmentsData } = useQuery(GET_ALL_DEPARTMENTS);
+  const [createTransfers] = useMutation(CREATE_TRANSFER);
 
   useEffect(() => {
     if (dataProducts) {
@@ -55,17 +51,16 @@ export const CreateMovement = ({ isSale }) => {
     }
   }, [departmentsData]);
 
-  const onFinish = async ({ description, amount, total, saleType }) => {
-    setMovements([
-      ...movements,
+  const onFinish = async ({ description, amount }) => {
+    setTransfers([
+      ...transfers,
       {
         id: generateUUID(),
         description,
+        departmentIdFrom: departmentFrom,
+        departmentIdTo: departmentTo,
+        productId,
         amount,
-        total,
-        productId: productId,
-        departmentId: warehouseId,
-        ...(isSale && { saleType }),
       },
     ]);
     setProductId(null);
@@ -94,56 +89,49 @@ export const CreateMovement = ({ isSale }) => {
     return department;
   };
   const removeMovement = (id) => {
-    const newMovements = movements.filter((movement) => movement.id !== id);
-    setMovements(newMovements);
+    const newTransfers = transfers.filter((transfer) => transfer.id !== id);
+    setTransfers(newTransfers);
   };
-
-  const calculateTotal = (e) => {
-    const amount = e.target.value;
-    if (productId && amount) {
-      const product = returnProductInfo(productId);
-      const total =
-        parseInt(isSale ? product.price : product.factoryPrice) *
-        parseInt(amount);
-      form.setFieldsValue({ total });
-    }
-  };
-
-  const createAllMovements = async () => {
+  const createAllTransfers = async () => {
     try {
-      const movementWithOutId = movements.map((movement) => {
+      const transfersWithOutId = transfers.map((transfer) => {
         return {
-          description: movement.description,
-          amount: parseInt(movement.amount),
-          total: parseInt(movement.total),
-          productId: parseInt(movement.productId),
-          departmentId: parseInt(movement.departmentId),
-          type: isSale ? 'SALE' : 'PURCHASE',
-          ...(isSale && { saleType: movement.saleType }),
+          description: transfer.description,
+          departmentIdFrom: parseInt(transfer.departmentIdFrom),
+          departmentIdTo: parseInt(transfer.departmentIdTo),
+          productId: parseInt(transfer.productId),
+          amount: parseInt(transfer.amount),
           date: dateValue,
         };
       });
-      const { data } = await createMovements({
+      const { data } = await createTransfers({
         variables: {
-          input: movementWithOutId,
+          input: transfersWithOutId,
         },
         refetchQueries: [
           {
-            query: GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
+            query: GET_TRANSFERS_BY_DEPARTMENT_AND_TYPE,
             variables: {
-              departmentId: parseInt(warehouseId),
-              departmentType: isSale ? 'SALE' : 'PURCHASE',
+              getTransfersByDepartmentInput2: {
+                id: parseInt(departmentTo),
+                type:
+                  returnBarraInfo(departmentTo).type === 'warehouse'
+                    ? 'RETURN'
+                    : 'STOCK',
+              },
             },
           },
         ],
       });
-      if (data.createMovements) {
+
+      if (data.createTransfers) {
         Modal.success({
-          content: 'Movimientos Creado',
+          content: 'Transferencias Creadas',
         });
-        history.push(isSale ? '/ventas' : '/gastos');
+        history.push('/transferencias');
       }
     } catch (error) {
+      console.log(error);
       Modal.error({
         title: 'Error',
         content: error,
@@ -154,14 +142,18 @@ export const CreateMovement = ({ isSale }) => {
   return (
     <Container>
       <Header>
-        <Title>{isSale ? 'Crear Ventas' : 'Crear Gastos'}</Title>
+        <Title>Crear Transferencias</Title>
         <HeaderActions style={{ justifyContent: 'flex-end' }}>
           <Autocomplete
             data={departmentsArray}
-            placeholder={
-              isSale ? 'Seleccione una barra' : 'Seleccione un inventario'
-            }
-            setAutocompleteValue={setWarehouseId}
+            placeholder='Departamento de origen'
+            setAutocompleteValue={setDepartmentFrom}
+          />
+          <span style={{ marginLeft: 20 }}></span>
+          <Autocomplete
+            data={departmentsArray}
+            placeholder='Departamento de destino'
+            setAutocompleteValue={setDepartmentTo}
           />
           <CustomDatePicker
             onChange={onChangeDate}
@@ -174,14 +166,16 @@ export const CreateMovement = ({ isSale }) => {
       <Row>
         <Col span={12}>
           <div className='movements-wrapper'>
-            {movements.map((movement) => (
+            {transfers.map((transfer) => (
               <MovementsCard
-                key={movement.id}
-                movement={movement}
+                key={transfer.id}
+                movement={transfer}
                 onDelete={removeMovement}
-                product={returnProductInfo(movement.productId)}
-                isSale={isSale}
-                department={returnBarraInfo(movement.departmentId).name}
+                product={returnProductInfo(transfer.productId)}
+                isSale={false}
+                isTransfer
+                departmentFrom={returnBarraInfo(departmentFrom).name}
+                departmentTo={returnBarraInfo(departmentTo).name}
               />
             ))}
           </div>
@@ -224,41 +218,17 @@ export const CreateMovement = ({ isSale }) => {
                   { required: true, message: 'La cantidad es requerida' },
                 ]}
               >
-                <CustomInput onChange={calculateTotal} />
-              </Form.Item>
-              {isSale && (
-                <Form.Item
-                  label='Tipo de venta'
-                  name='saleType'
-                  rules={[
-                    {
-                      required: true,
-                      message: 'El tipo de venta es requerido',
-                    },
-                  ]}
-                >
-                  <CustomSelect placeholder='Tipo de venta' allowClear fullW>
-                    <Option value='GENERAL'>General</Option>
-                    <Option value='CORTESIA'>Cortesia</Option>
-                    <Option value='GRATIS'>Gratis</Option>
-                  </CustomSelect>
-                </Form.Item>
-              )}
-
-              <Form.Item
-                label='Total'
-                name='total'
-                rules={[{ required: true, message: 'El total es requirido' }]}
-              >
                 <CustomInput />
               </Form.Item>
 
               <Form.Item>
                 <CustomButton
                   htmlType='submit'
-                  disabled={!warehouseId || !dateValue || !productId}
+                  disabled={
+                    !departmentFrom || !departmentTo || !dateValue || !productId
+                  }
                 >
-                  {isSale ? 'Agregar venta' : 'Agregar gasto'}
+                  Agregar Transferencia
                 </CustomButton>
               </Form.Item>
             </Form>
@@ -270,16 +240,12 @@ export const CreateMovement = ({ isSale }) => {
           style={{
             marginTop: '3rem',
           }}
-          onClick={createAllMovements}
-          disabled={!movements.length}
+          disabled={!transfers.length}
+          onClick={createAllTransfers}
         >
-          {isSale ? 'Crear ventas' : 'Crear gastos'}
+          Crear Transferencias
         </CustomButton>
       </Row>
     </Container>
   );
-};
-
-CreateMovement.propTypes = {
-  isSale: PropTypes.bool.isRequired,
 };

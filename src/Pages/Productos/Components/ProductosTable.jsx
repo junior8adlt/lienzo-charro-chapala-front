@@ -139,6 +139,7 @@ export const ProductosTable = ({ editAction }) => {
         dataSource={products}
         loading={loading}
         pagination={{ pageSize: 10 }}
+        rowKey='id'
       />
     </>
   );

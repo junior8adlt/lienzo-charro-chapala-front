@@ -5,8 +5,10 @@ import GlobalStyle from '../globalStyles';
 import { Barras } from '../Pages/Barras/Barras';
 import { Gastos } from '../Pages/Gastos/Gastos';
 import { Home } from '../Pages/Home';
+import { InventarioInfo } from '../Pages/Inventarios/InventarioInfo';
 import { Inventarios } from '../Pages/Inventarios/Inventarios';
 import { Productos } from '../Pages/Productos/Productos';
+import { CrearTransferencias } from '../Pages/Transferencias/CrearTransferencias';
 import { Transferencias } from '../Pages/Transferencias/Transferencias';
 import { Ventas } from '../Pages/Ventas/Ventas';
 
@@ -19,7 +21,8 @@ export const AppRouter = () => {
         <Route exact path='/' component={Home} />
         <Route path='/productos' component={Productos} />
         <Route path='/barras' component={Barras} />
-        <Route path='/inventarios' component={Inventarios} />
+        <Route exact path='/inventarios' component={Inventarios} />
+        <Route path='/inventarios/detalles/:id' component={InventarioInfo} />
         <Route exact path='/gastos' component={Gastos} />
         <Route
           path='/gastos/crear'
@@ -31,6 +34,7 @@ export const AppRouter = () => {
           render={(props) => <CreateMovement {...props} isSale={true} />}
         />
         <Route exact path='/transferencias' component={Transferencias} />
+        <Route path='/transferencias/crear' component={CrearTransferencias} />
       </Switch>
     </Router>
   );
