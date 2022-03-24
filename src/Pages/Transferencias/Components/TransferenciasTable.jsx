@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Space, Input, Row, Button } from 'antd';
+import { Table, Space, Input, Row, Button, Popconfirm } from 'antd';
 import {
   ActionItem,
   CustomDatePicker,
@@ -63,8 +63,15 @@ export const TransferenciasTable = ({
           <ActionItem key={record.id} onClick={() => editAction(record)}>
             Editar
           </ActionItem>
-          <ActionItem key={record.id} onClick={() => deleteAction(record)}>
-            Eliminar
+          <ActionItem key={record.id}>
+            <Popconfirm
+              title='¿Eliminar?'
+              okText='Si'
+              cancelText='No'
+              onConfirm={() => deleteAction(record)}
+            >
+              Eliminar
+            </Popconfirm>
           </ActionItem>
         </Space>
       ),

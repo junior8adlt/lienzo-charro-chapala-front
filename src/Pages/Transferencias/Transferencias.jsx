@@ -1,6 +1,8 @@
-import { useApolloClient, useQuery } from '@apollo/client';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
+import { Modal } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { DELETE_TRANSFER } from '../../Api/Mutations';
 import {
   GET_ALL_DEPARTMENTS,
   GET_TRANSFERS_BY_DEPARTMENT_AND_TYPE,
@@ -14,6 +16,7 @@ import {
   HeaderActions,
   Title,
 } from '../../globalStyles';
+import { TransferenciaModalForm } from './Components/TransferenciaModalForm';
 import { TransferenciasTable } from './Components/TransferenciasTable';
 
 const { Option } = CustomSelect;
@@ -25,9 +28,13 @@ export const Transferencias = () => {
   const [transfers, setTransfers] = useState([]);
   const [originalTransfers, setOriginalTransfers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [transferSelected, setTransferSelected] = useState(null);
   const history = useHistory();
   const client = useApolloClient();
   const { data: departmentsData } = useQuery(GET_ALL_DEPARTMENTS);
+
+  const [deleteTransfer] = useMutation(DELETE_TRANSFER);
 
   useEffect(() => {
     if (departmentsData) {
@@ -43,11 +50,46 @@ export const Transferencias = () => {
   }, [departmentId]);
 
   const editAction = (transfer) => {
-    console.log('editAction', transfer);
+    setVisible(true);
+    setTransferSelected(transfer);
   };
 
-  const deleteAction = (transfer) => {
-    console.log('deleteAction', transfer);
+  const deleteAction = async (transfer) => {
+    console.log(transfer);
+    try {
+      const { data } = await deleteTransfer({
+        variables: {
+          deleteTransferId: parseInt(transfer.id),
+        },
+        refetchQueries: [
+          {
+            query: GET_TRANSFERS_BY_DEPARTMENT_AND_TYPE,
+            variables: {
+              getTransfersByDepartmentInput2: {
+                id: parseInt(departmentId),
+                type:
+                  returnBarraInfo(departmentId).type === 'warehouse'
+                    ? 'RETURN'
+                    : 'STOCK',
+              },
+            },
+          },
+        ],
+      });
+      if (data.deleteTransfer) {
+        Modal.success({
+          content: 'Transferencia Eliminada',
+        });
+        // remove delete transfer
+        const newTransfers = transfers.filter(
+          (item) => item.id !== transfer.id
+        );
+        setTransfers(newTransfers);
+        setOriginalTransfers(newTransfers);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const searchTransfers = async () => {
@@ -71,8 +113,24 @@ export const Transferencias = () => {
     }
   };
 
+  const returnBarraInfo = (idDepartment) => {
+    const department = departments.find(
+      (department) => department.id === idDepartment
+    );
+    return department;
+  };
+
   return (
     <Container>
+      <TransferenciaModalForm
+        visible={visible}
+        setVisible={setVisible}
+        transferSelected={transferSelected}
+        setTransferSelected={setTransferSelected}
+        transfers={transfers}
+        setTransfers={setTransfers}
+        setOriginalTransfers={setOriginalTransfers}
+      />
       <Header>
         <Title>Transferencias</Title>
         <HeaderActions>
