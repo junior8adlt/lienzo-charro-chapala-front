@@ -51,6 +51,7 @@ export const GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE = gql`
       amount
       total
       type
+      saleType
       department {
         name
         id

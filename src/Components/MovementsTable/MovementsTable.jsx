@@ -64,6 +64,12 @@ export const MovementsTable = ({
       key: 'responsable',
     },
     {
+      title: 'Tipo de venta',
+      dataIndex: 'saleType',
+      key: 'responsable',
+      hidden: !isSale,
+    },
+    {
       title: 'Total',
       dataIndex: 'total',
       key: 'total',
@@ -91,7 +97,7 @@ export const MovementsTable = ({
         </Space>
       ),
     },
-  ];
+  ].filter((item) => !item.hidden);
 
   const onSearch = (value) => {
     setSearchValue(value);
@@ -205,5 +211,5 @@ MovementsTable.propTypes = {
   originalMovements: PropTypes.array.isRequired,
   departmentId: PropTypes.string,
   loading: PropTypes.bool.isRequired,
-  isSales: PropTypes.bool.isRequired,
+  isSale: PropTypes.bool.isRequired,
 };

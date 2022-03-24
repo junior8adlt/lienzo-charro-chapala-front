@@ -1,15 +1,17 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Modal, Form, Button } from 'antd';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {
   GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
   GET_PRODUCTS,
 } from '../../Api/Queries';
-import { CustomInput } from '../../globalStyles';
+import { CustomInput, CustomSelect } from '../../globalStyles';
 import dayjs from 'dayjs';
 import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
 import { UPDATE_MOVEMENT } from '../../Api/Mutations';
+
+const { Option } = CustomSelect;
 
 export const MovementsForm = ({
   visible,
@@ -25,7 +27,8 @@ export const MovementsForm = ({
   const [productId, setProductId] = useState(null);
   const [productsArray, setProductsArray] = useState([]);
   const [warehouseId, setWarehouseId] = useState(null);
-
+  const [saleTypes, setSaleTypes] = useState(null);
+  const [amountTotal, setAmountTotal] = useState(0);
   const [form] = Form.useForm();
   const customRef = useRef(null);
 
@@ -53,6 +56,8 @@ export const MovementsForm = ({
       form.setFieldsValue(movementSelected);
       setProductId(movementSelected.product.id);
       setWarehouseId(movementSelected.department.id);
+      setAmountTotal(movementSelected.amount);
+      setSaleTypes(movementSelected.saleType);
     }
   }, [movementSelected]);
 
@@ -64,7 +69,7 @@ export const MovementsForm = ({
     setMovementSelected(null);
     form.resetFields();
   };
-  const onFinish = async ({ description, amount, total }) => {
+  const onFinish = async ({ description, amount, total, saleType }) => {
     setConfirmLoading(true);
     try {
       const { data } = await updateMovement({
@@ -75,6 +80,7 @@ export const MovementsForm = ({
             amount: parseInt(amount),
             total: parseInt(total),
             type: isSale ? 'SALE' : 'PURCHASE',
+            ...(isSale && { saleType }),
             departmentId: parseInt(warehouseId),
             productId: parseInt(productId),
             date: dayjs(movementSelected.date).format('YYYY-MM-DD'),
@@ -92,6 +98,7 @@ export const MovementsForm = ({
               description,
               amount: parseInt(amount),
               total: parseInt(total),
+              ...(isSale && { saleType: movement.saleType }),
               product: returnProductInfo(productId),
             };
           } else {
@@ -118,14 +125,26 @@ export const MovementsForm = ({
     });
   };
 
-  const calculateTotal = (e) => {
-    const amount = e.target.value;
-    if (productId && amount) {
+  const calculateTotalUseCallback = useCallback(() => {
+    if (productId && amountTotal) {
       const product = returnProductInfo(productId);
-      const total = parseInt(product.factoryPrice) * parseInt(amount);
+      const total =
+        parseInt(
+          isSale && saleTypes === 'GENERAL'
+            ? product.price
+            : isSale && saleTypes === 'CORTESIA'
+            ? product.factoryPrice
+            : !isSale
+            ? product.factoryPrice
+            : 0
+        ) * parseInt(amountTotal);
       form.setFieldsValue({ total });
     }
-  };
+  }, [amountTotal, productId, saleTypes]);
+
+  useEffect(() => {
+    calculateTotalUseCallback();
+  }, [calculateTotalUseCallback]);
 
   const returnProductInfo = (idProduct) => {
     const product = productsArray.find((product) => product.id === idProduct);
@@ -174,8 +193,32 @@ export const MovementsForm = ({
           name='amount'
           rules={[{ required: true, message: 'La cantidad es requerida' }]}
         >
-          <CustomInput onChange={calculateTotal} />
+          <CustomInput onChange={(e) => setAmountTotal(e.target.value)} />
         </Form.Item>
+
+        {isSale && (
+          <Form.Item
+            label='Tipo de venta'
+            name='saleType'
+            rules={[
+              {
+                required: true,
+                message: 'El tipo de venta es requerido',
+              },
+            ]}
+          >
+            <CustomSelect
+              placeholder='Tipo de venta'
+              allowClear
+              fullW
+              onChange={(value) => setSaleTypes(value)}
+            >
+              <Option value='GENERAL'>General</Option>
+              <Option value='CORTESIA'>Cortesia</Option>
+              <Option value='GRATIS'>Gratis</Option>
+            </CustomSelect>
+          </Form.Item>
+        )}
 
         <Form.Item
           label='Total'

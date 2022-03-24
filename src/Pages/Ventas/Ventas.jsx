@@ -116,7 +116,7 @@ export const Ventas = () => {
         originalMovements={originalSales}
         departmentId={departmentId}
         loading={loading}
-        isSales={true}
+        isSale={true}
       />
     </Container>
   );

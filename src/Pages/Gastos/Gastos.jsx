@@ -116,7 +116,7 @@ export const Gastos = () => {
         originalMovements={originalPurchases}
         departmentId={departmentId}
         loading={loading}
-        isSales={false}
+        isSale={false}
       />
     </Container>
   );

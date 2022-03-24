@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -34,6 +34,8 @@ export const CreateMovement = ({ isSale }) => {
   const [productsArray, setProductsArray] = useState([]);
   const [departmentsArray, setDepartmentsArray] = useState([]);
   const [movements, setMovements] = useState([]);
+  const [saleTypes, setSaleTypes] = useState(null);
+  const [amountTotal, setAmountTotal] = useState(0);
   const history = useHistory();
   const [form] = Form.useForm();
 
@@ -98,16 +100,26 @@ export const CreateMovement = ({ isSale }) => {
     setMovements(newMovements);
   };
 
-  const calculateTotal = (e) => {
-    const amount = e.target.value;
-    if (productId && amount) {
+  const calculateTotalUseCallback = useCallback(() => {
+    if (productId && amountTotal) {
       const product = returnProductInfo(productId);
       const total =
-        parseInt(isSale ? product.price : product.factoryPrice) *
-        parseInt(amount);
+        parseInt(
+          isSale && saleTypes === 'GENERAL'
+            ? product.price
+            : isSale && saleTypes === 'CORTESIA'
+            ? product.factoryPrice
+            : !isSale
+            ? product.factoryPrice
+            : 0
+        ) * parseInt(amountTotal);
       form.setFieldsValue({ total });
     }
-  };
+  }, [amountTotal, productId, saleTypes]);
+
+  useEffect(() => {
+    calculateTotalUseCallback();
+  }, [calculateTotalUseCallback]);
 
   const createAllMovements = async () => {
     try {
@@ -224,7 +236,7 @@ export const CreateMovement = ({ isSale }) => {
                   { required: true, message: 'La cantidad es requerida' },
                 ]}
               >
-                <CustomInput onChange={calculateTotal} />
+                <CustomInput onChange={(e) => setAmountTotal(e.target.value)} />
               </Form.Item>
               {isSale && (
                 <Form.Item
@@ -237,7 +249,12 @@ export const CreateMovement = ({ isSale }) => {
                     },
                   ]}
                 >
-                  <CustomSelect placeholder='Tipo de venta' allowClear fullW>
+                  <CustomSelect
+                    placeholder='Tipo de venta'
+                    allowClear
+                    fullW
+                    onChange={(value) => setSaleTypes(value)}
+                  >
                     <Option value='GENERAL'>General</Option>
                     <Option value='CORTESIA'>Cortesia</Option>
                     <Option value='GRATIS'>Gratis</Option>
