@@ -53,8 +53,13 @@ export const MovementsCard = ({
           Cantidad: <span>{movement.amount}</span>
         </p>
       )}
+      {movement && movement.saleType && isSale && (
+        <p>
+          Tipo de venta: <span>{movement.saleType}</span>
+        </p>
+      )}
 
-      {movement && movement.total && (
+      {movement && (
         <p>
           Total: <span>${movement.total}</span>
         </p>
