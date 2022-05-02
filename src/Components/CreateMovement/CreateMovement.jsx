@@ -71,6 +71,7 @@ export const CreateMovement = ({ isSale }) => {
       },
     ]);
     setProductId(null);
+    setAmountTotal(0);
     form.resetFields();
   };
 

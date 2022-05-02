@@ -83,6 +83,7 @@ export const DepartmentsForm = ({
         }
       }
     } catch (error) {
+      console.log(error);
       Modal.error({
         title: 'Error',
         content: error,
@@ -91,6 +92,7 @@ export const DepartmentsForm = ({
   };
 
   const onFinishFailed = (errorInfo) => {
+    console.log(errorInfo);
     Modal.error({
       title: 'Error',
       content: errorInfo,
