@@ -6,18 +6,17 @@ import { useMutation, useQuery } from '@apollo/client';
 import { DepartmentCard } from '../../Components/DepartmentCard/DepartmentCard';
 import { DELETE_DEPARTMENT } from '../../Api/Mutations';
 import { DepartmentsForm } from '../../Components/DepartmentsForm/DepartmentsForm';
+import { NoData } from '../../Components/NoData/NoData';
 export const Barras = () => {
   const [visible, setVisible] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [departmentSelected, setDepartmentSelected] = useState(null);
   const [departmentId, setDepartmentId] = useState(null);
-  const { data } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
+  const { data, loading } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
     variables: { type: 'shop' },
   });
   const [deleteDepartment] = useMutation(DELETE_DEPARTMENT, {
-    refetchQueries: [
-      { query: GET_DEPARTMENTS_BY_TYPE, variables: { type: 'shop' } },
-    ],
+    refetchQueries: [{ query: GET_DEPARTMENTS_BY_TYPE, variables: { type: 'shop' } }],
   });
   const deleteAction = async (id) => {
     setDepartmentId(id);
@@ -56,18 +55,14 @@ export const Barras = () => {
       />
       <Header>
         <Title>Barras</Title>
-        <CustomButton onClick={() => setVisible(true)}>
-          Crear Barra
-        </CustomButton>
+        <CustomButton onClick={() => setVisible(true)}>Crear Barra</CustomButton>
       </Header>
       <Row>
-        {data &&
+        {!loading &&
+          data &&
+          data.getDepartments.length &&
           data.getDepartments.map((department) => (
-            <Col
-              span={4}
-              key={department.id}
-              style={{ marginLeft: 20, marginBottom: '3rem' }}
-            >
+            <Col span={4} key={department.id} style={{ marginLeft: 20, marginBottom: '3rem' }}>
               <DepartmentCard
                 department={department}
                 deleteAction={deleteAction}
@@ -75,6 +70,7 @@ export const Barras = () => {
               />
             </Col>
           ))}
+        {!loading && !data.getDepartments.length && <NoData />}
       </Row>
     </Container>
   );

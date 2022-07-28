@@ -59,7 +59,7 @@ export const MovementsCard = ({
         </p>
       )}
 
-      {movement && (
+      {movement && movement.total && (
         <p>
           Total: <span>${movement.total}</span>
         </p>

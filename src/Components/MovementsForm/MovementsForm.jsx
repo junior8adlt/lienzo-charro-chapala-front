@@ -2,10 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Modal, Form, Button } from 'antd';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import {
-  GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE,
-  GET_PRODUCTS,
-} from '../../Api/Queries';
+import { GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE, GET_PRODUCTS } from '../../Api/Queries';
 import { CustomInput, CustomSelect } from '../../globalStyles';
 import dayjs from 'dayjs';
 import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
@@ -136,7 +133,7 @@ export const MovementsForm = ({
             ? product.factoryPrice
             : !isSale
             ? product.factoryPrice
-            : 0
+            : 0,
         ) * parseInt(amountTotal);
       form.setFieldsValue({ total });
     }
@@ -229,11 +226,7 @@ export const MovementsForm = ({
         </Form.Item>
 
         <Form.Item>
-          <Button
-            ref={customRef}
-            style={{ display: 'none' }}
-            htmlType='submit'
-          />
+          <Button ref={customRef} style={{ display: 'none' }} htmlType='submit' />
         </Form.Item>
       </Form>
     </Modal>

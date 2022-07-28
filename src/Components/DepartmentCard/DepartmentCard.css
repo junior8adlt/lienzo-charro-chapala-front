@@ -1,7 +1,6 @@
 .custom-card {
   width: 100%;
   padding: 20px;
-  height: 230px;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -62,7 +61,6 @@
   display: flex;
   align-items: center;
   justify-content: end;
-  transform: translateY(25px);
 }
 .custom-card .card-footer span {
   color: #fff;

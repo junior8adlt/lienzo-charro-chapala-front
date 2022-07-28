@@ -7,19 +7,18 @@ import { DepartmentCard } from '../../Components/DepartmentCard/DepartmentCard';
 import { DELETE_DEPARTMENT } from '../../Api/Mutations';
 import { DepartmentsForm } from '../../Components/DepartmentsForm/DepartmentsForm';
 import { useHistory } from 'react-router-dom';
+import { NoData } from '../../Components/NoData/NoData';
 
 export const Inventarios = () => {
   const [visible, setVisible] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [departmentSelected, setDepartmentSelected] = useState(null);
   const history = useHistory();
-  const { data } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
+  const { data, loading } = useQuery(GET_DEPARTMENTS_BY_TYPE, {
     variables: { type: 'warehouse' },
   });
   const [deleteDepartment] = useMutation(DELETE_DEPARTMENT, {
-    refetchQueries: [
-      { query: GET_DEPARTMENTS_BY_TYPE, variables: { type: 'warehouse' } },
-    ],
+    refetchQueries: [{ query: GET_DEPARTMENTS_BY_TYPE, variables: { type: 'warehouse' } }],
   });
   const deleteAction = async (id) => {
     try {
@@ -55,30 +54,24 @@ export const Inventarios = () => {
       />
       <Header>
         <Title>Inventarios</Title>
-        <CustomButton onClick={() => setVisible(true)}>
-          Crear Inventario
-        </CustomButton>
+        <CustomButton onClick={() => setVisible(true)}>Crear Inventario</CustomButton>
       </Header>
       <Row>
-        {data &&
+        {!loading &&
+          data.getDepartments.length &&
           data.getDepartments.map((department) => (
-            <Col
-              span={4}
-              key={department.id}
-              style={{ marginLeft: 20, marginBottom: '3rem' }}
-            >
+            <Col span={4} key={department.id} style={{ marginLeft: 20, marginBottom: '3rem' }}>
               <DepartmentCard
                 department={department}
                 deleteAction={deleteAction}
                 editAction={editDepartment}
                 actions
                 actionButtonText='Ver Inventario'
-                actionButtonOnClick={() =>
-                  history.push(`/inventarios/detalles/${department.id}`)
-                }
+                actionButtonOnClick={() => history.push(`/inventarios/detalles/${department.id}`)}
               />
             </Col>
           ))}
+        {!loading && !data.getDepartments.length && <NoData />}
       </Row>
     </Container>
   );

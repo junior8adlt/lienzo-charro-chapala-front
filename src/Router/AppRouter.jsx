@@ -8,6 +8,7 @@ import { Home } from '../Pages/Home';
 import { InventarioInfo } from '../Pages/Inventarios/InventarioInfo';
 import { Inventarios } from '../Pages/Inventarios/Inventarios';
 import { Productos } from '../Pages/Productos/Productos';
+import { Reportes } from '../Pages/Reportes/Reportes';
 import { CrearTransferencias } from '../Pages/Transferencias/CrearTransferencias';
 import { Transferencias } from '../Pages/Transferencias/Transferencias';
 import { Ventas } from '../Pages/Ventas/Ventas';
@@ -35,6 +36,7 @@ export const AppRouter = () => {
         />
         <Route exact path='/transferencias' component={Transferencias} />
         <Route path='/transferencias/crear' component={CrearTransferencias} />
+        <Route path='/reporte' component={Reportes} />
       </Switch>
     </Router>
   );

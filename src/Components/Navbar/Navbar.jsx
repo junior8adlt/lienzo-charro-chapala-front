@@ -30,7 +30,7 @@ export const Navbar = () => {
             <Link to='/inventarios'>Inventarios</Link>
           </li>
           <li className='navbar-item'>
-            <Link to='/'>Reportes</Link>
+            <Link to='/reporte'>Reportes</Link>
           </li>
         </ul>
       </div>

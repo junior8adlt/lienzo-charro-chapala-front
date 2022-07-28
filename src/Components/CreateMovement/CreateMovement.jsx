@@ -72,6 +72,7 @@ export const CreateMovement = ({ isSale }) => {
     ]);
     setProductId(null);
     setAmountTotal(0);
+    setSaleTypes(null);
     form.resetFields();
   };
 
@@ -91,9 +92,7 @@ export const CreateMovement = ({ isSale }) => {
   };
 
   const returnBarraInfo = (idDepartment) => {
-    const department = departmentsArray.find(
-      (department) => department.id === idDepartment
-    );
+    const department = departmentsArray.find((department) => department.id === idDepartment);
     return department;
   };
   const removeMovement = (id) => {
@@ -112,11 +111,11 @@ export const CreateMovement = ({ isSale }) => {
             ? product.factoryPrice
             : !isSale
             ? product.factoryPrice
-            : 0
+            : 0,
         ) * parseInt(amountTotal);
       form.setFieldsValue({ total });
     }
-  }, [amountTotal, productId, saleTypes]);
+  }, [amountTotal, productId]);
 
   useEffect(() => {
     calculateTotalUseCallback();
@@ -131,6 +130,7 @@ export const CreateMovement = ({ isSale }) => {
           total: parseInt(movement.total),
           productId: parseInt(movement.productId),
           departmentId: parseInt(movement.departmentId),
+          saleType: saleTypes,
           type: isSale ? 'SALE' : 'PURCHASE',
           ...(isSale && { saleType: movement.saleType }),
           date: dateValue,
@@ -171,9 +171,7 @@ export const CreateMovement = ({ isSale }) => {
         <HeaderActions style={{ justifyContent: 'flex-end' }}>
           <Autocomplete
             data={departmentsArray}
-            placeholder={
-              isSale ? 'Seleccione una barra' : 'Seleccione un inventario'
-            }
+            placeholder={isSale ? 'Seleccione una barra' : 'Seleccione un inventario'}
             setAutocompleteValue={setWarehouseId}
           />
           <CustomDatePicker
@@ -218,9 +216,7 @@ export const CreateMovement = ({ isSale }) => {
               </Form.Item>
               <Form.Item
                 label='Producto'
-                rules={[
-                  { required: true, message: 'El producto es requerido' },
-                ]}
+                rules={[{ required: true, message: 'El producto es requerido' }]}
               >
                 <Autocomplete
                   data={productsArray}
@@ -233,9 +229,7 @@ export const CreateMovement = ({ isSale }) => {
               <Form.Item
                 label='Cantidad'
                 name='amount'
-                rules={[
-                  { required: true, message: 'La cantidad es requerida' },
-                ]}
+                rules={[{ required: true, message: 'La cantidad es requerida' }]}
               >
                 <CustomInput onChange={(e) => setAmountTotal(e.target.value)} />
               </Form.Item>
@@ -272,10 +266,7 @@ export const CreateMovement = ({ isSale }) => {
               </Form.Item>
 
               <Form.Item>
-                <CustomButton
-                  htmlType='submit'
-                  disabled={!warehouseId || !dateValue || !productId}
-                >
+                <CustomButton htmlType='submit' disabled={!warehouseId || !dateValue || !productId}>
                   {isSale ? 'Agregar venta' : 'Agregar gasto'}
                 </CustomButton>
               </Form.Item>

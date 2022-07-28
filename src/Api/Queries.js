@@ -38,14 +38,8 @@ export const GET_PRODUCTS = gql`
 `;
 
 export const GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE = gql`
-  query GetMovementsByDepartmentAndType(
-    $departmentId: Int!
-    $departmentType: String!
-  ) {
-    getMovementsByDepartmentAndType(
-      departmentId: $departmentId
-      departmentType: $departmentType
-    ) {
+  query GetMovementsByDepartmentAndType($departmentId: Int!, $departmentType: String!) {
+    getMovementsByDepartmentAndType(departmentId: $departmentId, departmentType: $departmentType) {
       id
       description
       amount
@@ -73,9 +67,7 @@ export const GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE = gql`
 `;
 
 export const GET_TRANSFERS_BY_DEPARTMENT_AND_TYPE = gql`
-  query GetTransfersByDepartment(
-    $getTransfersByDepartmentInput2: GetTransfersByDepartmentInput
-  ) {
+  query GetTransfersByDepartment($getTransfersByDepartmentInput2: GetTransfersByDepartmentInput) {
     getTransfersByDepartment(input: $getTransfersByDepartmentInput2) {
       id
       description
@@ -162,6 +154,7 @@ export const GET_REPORT_BY_DEPARTMENT_AND_DATE = gql`
         amount
         total
         type
+        saleType
         department {
           id
           name

@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 import * as fetch from 'cross-fetch';
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: 'https://point-of-sale-carnaval-server.onrender.com/graphql',
   fetch,
 });
 

@@ -85,7 +85,9 @@ export const ProductosTable = ({ editAction }) => {
   const onSearch = (value) => {
     setSearchValue(value);
     setProducts(
-      originalProducts.filter((product) => product.name.includes(value))
+      originalProducts.filter((product) =>
+        product.name.toLowerCase().includes(value.toLowerCase())
+      )
     );
   };
 
