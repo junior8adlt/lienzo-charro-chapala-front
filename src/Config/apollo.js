@@ -1,14 +1,8 @@
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
-import * as fetch from 'cross-fetch';
-
-const httpLink = new HttpLink({
-  uri: 'https://point-of-sale-carnaval-server.onrender.com/graphql',
-  fetch,
-});
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 const client = new ApolloClient({
+  uri: 'https://point-of-sale-carnaval-server.onrender.com/graphql',
   cache: new InMemoryCache(),
-  link: httpLink,
 });
 
 export default client;
