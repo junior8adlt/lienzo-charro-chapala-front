@@ -173,13 +173,15 @@ export const Reportes = () => {
           </>
         )}
       </Row>
-      <Row gutter={[16, 16]} style={{ width: '100%', marginTop: '2rem' }}>
-        <>
-          <Col span={24}>
-            <Subtitle>Más detalles:</Subtitle>
-          </Col>
-        </>
-      </Row>
+      {report && (
+        <Row gutter={[16, 16]} style={{ width: '100%', marginTop: '2rem' }}>
+          <>
+            <Col span={24}>
+              <Subtitle>Más detalles:</Subtitle>
+            </Col>
+          </>
+        </Row>
+      )}
     </Container>
   );
 };

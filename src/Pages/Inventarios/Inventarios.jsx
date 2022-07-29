@@ -1,4 +1,4 @@
-import { Col, Modal, Row } from 'antd';
+import { Col, Modal, Row, Spin } from 'antd';
 import React, { useState } from 'react';
 import { Container, CustomButton, Header, Title } from '../../globalStyles';
 import { GET_DEPARTMENTS_BY_TYPE } from '../../Api/Queries';
@@ -8,6 +8,7 @@ import { DELETE_DEPARTMENT } from '../../Api/Mutations';
 import { DepartmentsForm } from '../../Components/DepartmentsForm/DepartmentsForm';
 import { useHistory } from 'react-router-dom';
 import { NoData } from '../../Components/NoData/NoData';
+import { LoadingOutlined } from '@ant-design/icons';
 
 export const Inventarios = () => {
   const [visible, setVisible] = useState(false);
@@ -56,23 +57,29 @@ export const Inventarios = () => {
         <Title>Inventarios</Title>
         <CustomButton onClick={() => setVisible(true)}>Crear Inventario</CustomButton>
       </Header>
-      <Row>
-        {!loading &&
-          data.getDepartments.length &&
-          data.getDepartments.map((department) => (
-            <Col span={4} key={department.id} style={{ marginLeft: 20, marginBottom: '3rem' }}>
-              <DepartmentCard
-                department={department}
-                deleteAction={deleteAction}
-                editAction={editDepartment}
-                actions
-                actionButtonText='Ver Inventario'
-                actionButtonOnClick={() => history.push(`/inventarios/detalles/${department.id}`)}
-              />
-            </Col>
-          ))}
-        {!loading && !data.getDepartments.length && <NoData />}
-      </Row>
+      <Spin
+        spinning={loading}
+        tip='Cargando...'
+        indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+      >
+        <Row style={loading ? { height: 400 } : { height: 'auto' }}>
+          {!loading &&
+            data.getDepartments.length &&
+            data.getDepartments.map((department) => (
+              <Col span={4} key={department.id} style={{ marginLeft: 20, marginBottom: '3rem' }}>
+                <DepartmentCard
+                  department={department}
+                  deleteAction={deleteAction}
+                  editAction={editDepartment}
+                  actions
+                  actionButtonText='Ver Inventario'
+                  actionButtonOnClick={() => history.push(`/inventarios/detalles/${department.id}`)}
+                />
+              </Col>
+            ))}
+          {!loading && !data.getDepartments.length && <NoData />}
+        </Row>
+      </Spin>
     </Container>
   );
 };
