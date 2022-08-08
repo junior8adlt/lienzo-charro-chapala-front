@@ -77,7 +77,9 @@ export const Barras = () => {
                 />
               </Col>
             ))}
-          {!loading && !data.getDepartments.length && <NoData />}
+          {!loading && !data.getDepartments.length && (
+            <NoData noDataTitle='No hay Barras creadas' />
+          )}
         </Row>
       </Spin>
     </Container>

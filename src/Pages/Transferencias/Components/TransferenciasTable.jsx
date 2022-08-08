@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Space, Input, Row, Button, Popconfirm } from 'antd';
-import {
-  ActionItem,
-  CustomDatePicker,
-  Subtitle,
-  TableActions,
-} from '../../../globalStyles';
+import { ActionItem, CustomDatePicker, Subtitle, TableActions } from '../../../globalStyles';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 const { Search } = Input;
@@ -81,7 +76,7 @@ export const TransferenciasTable = ({
   const onSearch = (value) => {
     setSearchValue(value);
     const filteredTransfers = originalTransfers.filter((movement) =>
-      movement.description.toLowerCase().includes(value.toLowerCase())
+      movement.description.toLowerCase().includes(value.toLowerCase()),
     );
     setTransfers(filteredTransfers);
   };
@@ -97,8 +92,7 @@ export const TransferenciasTable = ({
   const searchByDate = () => {
     if (dateFilterValue) {
       const newPurchases = originalTransfers.filter(
-        (movement) =>
-          dayjs(movement.date).format('DD/MM/YYYY') === dateFilterValue
+        (movement) => dayjs(movement.date).format('DD/MM/YYYY') === dateFilterValue,
       );
       setTransfers(newPurchases);
       return;
@@ -142,6 +136,7 @@ export const TransferenciasTable = ({
         loading={loading}
         pagination={{ pageSize: 10 }}
         rowKey='id'
+        locale={{ emptyText: 'No se encontraron transferencias' }}
       />
     </>
   );

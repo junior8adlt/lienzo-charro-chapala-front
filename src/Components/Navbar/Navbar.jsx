@@ -1,39 +1,52 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import logo from '../../assets/img/logo.png';
-
-import './Navbar.css';
+import { Bars, MobilMenu, Nav, NavLink, NavMenu, Times } from './Navbar.elements';
 export const Navbar = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const onClickNavLink = () => {
+    setIsOpen(false);
+  };
+  const NavItems = () => (
+    <>
+      <NavLink to='/transferencias' activeStyle onClick={onClickNavLink}>
+        Transferencias
+      </NavLink>
+      <NavLink to='/ventas' activeStyle onClick={onClickNavLink}>
+        Ventas
+      </NavLink>
+      <NavLink to='/gastos' activeStyle onClick={onClickNavLink}>
+        Gastos
+      </NavLink>
+      <NavLink to='/productos' activeStyle onClick={onClickNavLink}>
+        Productos
+      </NavLink>
+      <NavLink to='/barras' activeStyle onClick={onClickNavLink}>
+        Barras
+      </NavLink>
+      <NavLink to='/inventarios' activeStyle onClick={onClickNavLink}>
+        Inventarios
+      </NavLink>
+      <NavLink to='/reporte' activeStyle onClick={onClickNavLink}>
+        Reportes
+      </NavLink>
+    </>
+  );
   return (
-    <nav className='navbar'>
-      <div className='nav-wrapper'>
-        <Link to='/' className='brand-logo'>
-          <img src={logo} alt='Carnaval Logo' />
-        </Link>
-        <ul className='navbar-items'>
-          <li className='navbar-item'>
-            <Link to='/transferencias'>Transferencias</Link>
-          </li>
-          <li className='navbar-item'>
-            <Link to='/ventas'>Ventas</Link>
-          </li>
-          <li className='navbar-item'>
-            <Link to='/gastos'>Gastos</Link>
-          </li>
-          <li className='navbar-item'>
-            <Link to='/productos'>Productos</Link>
-          </li>
-          <li className='navbar-item'>
-            <Link to='/barras'>Barras</Link>
-          </li>
-          <li className='navbar-item'>
-            <Link to='/inventarios'>Inventarios</Link>
-          </li>
-          <li className='navbar-item'>
-            <Link to='/reporte'>Reportes</Link>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <Nav>
+      <NavLink to='/'>
+        <img src={logo} alt='Carnaval Logo' />
+      </NavLink>
+      {isOpen ? (
+        <Times onClick={() => setIsOpen(false)} />
+      ) : (
+        <Bars onClick={() => setIsOpen(true)} />
+      )}
+
+      <NavMenu>
+        <NavItems />
+      </NavMenu>
+      {isOpen && <MobilMenu>{NavItems()}</MobilMenu>}
+    </Nav>
   );
 };

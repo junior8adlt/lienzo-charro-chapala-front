@@ -77,7 +77,9 @@ export const Inventarios = () => {
                 />
               </Col>
             ))}
-          {!loading && !data.getDepartments.length && <NoData />}
+          {!loading && !data.getDepartments.length && (
+            <NoData noDataTitle='No hay inventarios creados' />
+          )}
         </Row>
       </Spin>
     </Container>

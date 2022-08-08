@@ -25,9 +25,7 @@ export const ProductosTable = ({ editAction }) => {
       cache.writeQuery({
         query: GET_PRODUCTS,
         data: {
-          getProducts: getProducts.filter(
-            (product) => +product.id !== +productId
-          ),
+          getProducts: getProducts.filter((product) => +product.id !== +productId),
         },
       });
     },
@@ -50,8 +48,7 @@ export const ProductosTable = ({ editAction }) => {
       title: 'Precio Proveedor',
       dataIndex: 'factoryPrice',
       key: 'factoryPrice',
-      render: (factoryPrice) =>
-        `${factoryPrice !== null ? '$' + factoryPrice : 'N/D'}`,
+      render: (factoryPrice) => `${factoryPrice !== null ? '$' + factoryPrice : 'N/D'}`,
     },
     {
       title: 'Comisión',
@@ -86,8 +83,8 @@ export const ProductosTable = ({ editAction }) => {
     setSearchValue(value);
     setProducts(
       originalProducts.filter((product) =>
-        product.name.toLowerCase().includes(value.toLowerCase())
-      )
+        product.name.toLowerCase().includes(value.toLowerCase()),
+      ),
     );
   };
 
@@ -142,6 +139,7 @@ export const ProductosTable = ({ editAction }) => {
         loading={loading}
         pagination={{ pageSize: 10 }}
         rowKey='id'
+        locale={{ emptyText: 'No se encontraron productos' }}
       />
     </>
   );

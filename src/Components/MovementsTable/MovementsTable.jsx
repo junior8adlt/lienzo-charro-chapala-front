@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import { Table, Space, Modal, Input, Row, Button } from 'antd';
 import { useMutation } from '@apollo/client';
 import { GET_MOVEMENTS_BY_DEPARTMENT_AND_TYPE } from '../../Api/Queries';
-import {
-  ActionItem,
-  CustomDatePicker,
-  Subtitle,
-  TableActions,
-} from '../../globalStyles';
+import { ActionItem, CustomDatePicker, Subtitle, TableActions } from '../../globalStyles';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { DELETE_MOVEMENT } from '../../Api/Mutations';
 import dayjs from 'dayjs';
@@ -102,7 +97,7 @@ export const MovementsTable = ({
   const onSearch = (value) => {
     setSearchValue(value);
     const filteredMovements = originalMovements.filter((movement) =>
-      movement.description.toLowerCase().includes(value.toLowerCase())
+      movement.description.toLowerCase().includes(value.toLowerCase()),
     );
     setMovements(filteredMovements);
   };
@@ -131,9 +126,7 @@ export const MovementsTable = ({
       Modal.success({
         content: 'Movimiento Eliminado',
       });
-      const filterMovements = movements.filter(
-        (movement) => +movement.id !== +idMovement
-      );
+      const filterMovements = movements.filter((movement) => +movement.id !== +idMovement);
       setMovements(filterMovements);
     } catch (error) {
       Modal.error({
@@ -154,8 +147,7 @@ export const MovementsTable = ({
   const searchByDate = () => {
     if (dateFilterValue) {
       const newPurchases = originalMovements.filter(
-        (movement) =>
-          dayjs(movement.date).format('DD/MM/YYYY') === dateFilterValue
+        (movement) => dayjs(movement.date).format('DD/MM/YYYY') === dateFilterValue,
       );
       setMovements(newPurchases);
       return;
@@ -199,6 +191,7 @@ export const MovementsTable = ({
         loading={loading}
         pagination={{ pageSize: 10 }}
         rowKey='id'
+        locale={{ emptyText: isSale ? 'No hay ventas' : 'No hay gastos' }}
       />
     </>
   );
