@@ -21,4 +21,7 @@ export const CardContent = styled.p`
   line-height: 1.5;
   text-align: center;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

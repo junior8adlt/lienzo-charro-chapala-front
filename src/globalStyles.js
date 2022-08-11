@@ -123,4 +123,5 @@ export const CustomSelect = styled(Select)`
     }
   }
 `;
+
 export default GlobalStyle;

@@ -249,3 +249,21 @@ export const GET_INVENTORY_STOCK = gql`
     }
   }
 `;
+
+export const GET_SALES_OF_ALL_SHOPS = gql`
+  query GetSalesTotalByAllTheShops($date: String) {
+    getSalesTotalByAllTheShops(date: $date) {
+      id
+      description
+      amount
+      total
+      type
+      saleType
+      department {
+        id
+        name
+      }
+      date
+    }
+  }
+`;
