@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Container, CustomButton, Header, HeaderActions, Title } from '../../globalStyles';
 import { InventarioStockTable } from './Components/InventarioStockTable';
 import { FaChevronLeft } from 'react-icons/fa';
-import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai';
+import { AiOutlineArrowDown, AiOutlineArrowUp, AiOutlineArrowRight } from 'react-icons/ai';
 import { Card, Col, Modal, Row, Spin } from 'antd';
 import { CardContent, CardTitle } from '../Reportes/Reportes.elements';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -149,15 +149,31 @@ export const InventarioInfo = () => {
                     <span
                       style={{
                         marginTop: 5,
-                        color: returnIsPositive() === 1 ? '#00a854' : '#f5222d',
+                        color:
+                          returnIsPositive() === 0
+                            ? '#000000'
+                            : returnIsPositive() === 1
+                            ? '#00a854'
+                            : '#f5222d',
                       }}
                     >
                       {' '}
-                      {returnIsPositive() === 1 ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
+                      {returnIsPositive() === 0 ? (
+                        <AiOutlineArrowRight />
+                      ) : returnIsPositive() === 1 ? (
+                        <AiOutlineArrowUp />
+                      ) : (
+                        <AiOutlineArrowDown />
+                      )}
                     </span>
                     <span
                       style={{
-                        color: returnIsPositive() === 1 ? '#00a854' : '#f5222d',
+                        color:
+                          returnIsPositive() === 0
+                            ? '#000000'
+                            : returnIsPositive() === 1
+                            ? '#00a854'
+                            : '#f5222d',
                       }}
                     >
                       {' '}
