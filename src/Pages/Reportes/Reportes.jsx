@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from '@apollo/client';
-import { Col, Modal, Row, Card } from 'antd';
+import { Col, Modal, Row, Card, Spin } from 'antd';
 import React, { useState } from 'react';
 import { GET_DEPARTMENTS_BY_TYPE, GET_REPORT_BY_DEPARTMENT_AND_DATE } from '../../Api/Queries';
 import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
@@ -12,12 +12,15 @@ import {
   Title,
 } from '../../globalStyles';
 import { CardContent, CardTitle, Subtitle } from './Reportes.elements';
+import { ReportesTable } from './ReportesTable';
+import { LoadingOutlined } from '@ant-design/icons';
 
 export const Reportes = () => {
   const [departmentsArray, setDepartmentsArray] = useState([]);
   const [departmentId, setDepartmentId] = useState(null);
   const [dateValue, setDateValue] = useState(null);
   const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(false);
   const client = useApolloClient();
 
   useQuery(GET_DEPARTMENTS_BY_TYPE, {
@@ -39,6 +42,7 @@ export const Reportes = () => {
   };
 
   const generateReport = async () => {
+    setLoading(true);
     try {
       const { data } = await client.query({
         query: GET_REPORT_BY_DEPARTMENT_AND_DATE,
@@ -48,11 +52,13 @@ export const Reportes = () => {
         },
       });
       setReport(data.getResumeByDepartmentAndDate);
+      setLoading(false);
     } catch (error) {
       Modal.error({
         title: 'Error',
         content: error,
       });
+      setLoading(false);
     }
   };
 
@@ -101,87 +107,92 @@ export const Reportes = () => {
           </CustomButton>
         </HeaderActions>
       </Header>
-      <Row>
-        {report && (
-          <>
-            <Col span={24}>
-              <Subtitle>Métricas Barra {departmentName(departmentId)}:</Subtitle>
-            </Col>
-            <Row gutter={[16, 16]} style={{ width: '100%' }}>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Producto Entregado</CardTitle>
-                  <CardContent>{report.metrics.totalAmountProductTransfered}</CardContent>
-                </Card>
+      <Spin
+        spinning={loading}
+        tip='Cargando...'
+        indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+      >
+        <Row style={loading ? { height: 400 } : { height: 'auto' }}>
+          {report && (
+            <>
+              <Col span={24}>
+                <Subtitle>Métricas Barra {departmentName(departmentId)}:</Subtitle>
               </Col>
+              <Row gutter={[16, 16]} style={{ width: '100%' }}>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Producto Entregado</CardTitle>
+                    <CardContent>{report.metrics.totalAmountProductTransfered}</CardContent>
+                  </Card>
+                </Col>
 
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Producto Que Regreso</CardTitle>
-                  <CardContent>{report.metrics.totalProductAmountToReturn}</CardContent>
-                </Card>
-              </Col>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Producto Vendido</CardTitle>
-                  <CardContent>{report.metrics.totalAmountSaleProduct}</CardContent>
-                </Card>
-              </Col>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Venta Total Del Producto</CardTitle>
-                  <CardContent>${report.metrics.totalSale}</CardContent>
-                </Card>
-              </Col>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Comisión Para La Barra</CardTitle>
-                  <CardContent>${report.metrics.totalSaleCommission}</CardContent>
-                </Card>
-              </Col>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Cortesías</CardTitle>
-                  <CardContent>{totalCommissionAmount(report.movements)}</CardContent>
-                </Card>
-              </Col>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Total de cortesías</CardTitle>
-                  <CardContent>${totalCommission(report.movements)}</CardContent>
-                </Card>
-              </Col>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Total a entregar</CardTitle>
-                  <CardContent>${report.metrics.wareHouseTotalFinal}</CardContent>
-                </Card>
-              </Col>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Producto Regalado (Fam)</CardTitle>
-                  <CardContent>{report.metrics.totalFreeAmountSaleProduct}</CardContent>
-                </Card>
-              </Col>
-              <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                <Card>
-                  <CardTitle>Total Producto Regalado</CardTitle>
-                  <CardContent>${report.metrics.totalFreeSale}</CardContent>
-                </Card>
-              </Col>
-            </Row>
-          </>
-        )}
-      </Row>
-      {report && (
-        <Row gutter={[16, 16]} style={{ width: '100%', marginTop: '2rem' }}>
-          <>
-            <Col span={24}>
-              <Subtitle>Más detalles:</Subtitle>
-            </Col>
-          </>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Producto Que Regreso</CardTitle>
+                    <CardContent>{report.metrics.totalProductAmountToReturn}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Producto Vendido</CardTitle>
+                    <CardContent>{report.metrics.totalAmountSaleProduct}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Venta Total Del Producto</CardTitle>
+                    <CardContent>${report.metrics.totalSale}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Comisión Para La Barra</CardTitle>
+                    <CardContent>${report.metrics.totalSaleCommission}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Cortesías</CardTitle>
+                    <CardContent>{totalCommissionAmount(report.movements)}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Total de cortesías</CardTitle>
+                    <CardContent>${totalCommission(report.movements)}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Total a entregar</CardTitle>
+                    <CardContent>${report.metrics.wareHouseTotalFinal}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Producto Regalado</CardTitle>
+                    <CardContent>{report.metrics.totalFreeAmountSaleProduct}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Total Producto Regalado</CardTitle>
+                    <CardContent>${report.metrics.totalFreeSale}</CardContent>
+                  </Card>
+                </Col>
+              </Row>{' '}
+              <Row gutter={[16, 16]} style={{ width: '100%', marginTop: '2rem' }}>
+                <>
+                  <Col span={24}>
+                    <Subtitle>Más detalles:</Subtitle>
+                    <ReportesTable movements={report.movements} transfers={report.transfers} />
+                  </Col>
+                </>
+              </Row>
+            </>
+          )}
         </Row>
-      )}
+      </Spin>
     </Container>
   );
 };

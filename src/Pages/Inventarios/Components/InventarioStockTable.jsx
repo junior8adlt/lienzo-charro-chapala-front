@@ -44,9 +44,7 @@ export const InventarioStockTable = () => {
   }
   const onSearch = (value) => {
     setSearchValue(value);
-    setProducts(
-      originalProducts.filter((product) => product.name.includes(value))
-    );
+    setProducts(originalProducts.filter((product) => product.name.includes(value)));
   };
 
   return (
@@ -68,6 +66,7 @@ export const InventarioStockTable = () => {
         loading={loading}
         pagination={{ pageSize: 10 }}
         rowKey='id'
+        locale={{ emptyText: 'No se encontraron productos' }}
       />
     </>
   );

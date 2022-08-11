@@ -23,6 +23,7 @@ import { CREATE_TRANSFER } from '../../Api/Mutations';
 import { generateUUID } from '../../utils/generateUUID';
 
 import '../../Components/CreateMovement/Movements.css';
+import { LoadingIndicator } from '../../Components/LoadingSpinner/LoadingSpinner';
 
 export const CrearTransferencias = () => {
   const [transfers, setTransfers] = useState([]);
@@ -32,6 +33,7 @@ export const CrearTransferencias = () => {
   const [productId, setProductId] = useState(null);
   const [productsArray, setProductsArray] = useState([]);
   const [departmentsArray, setDepartmentsArray] = useState([]);
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [form] = Form.useForm();
 
@@ -83,9 +85,7 @@ export const CrearTransferencias = () => {
   };
 
   const returnBarraInfo = (idDepartment) => {
-    const department = departmentsArray.find(
-      (department) => department.id === idDepartment
-    );
+    const department = departmentsArray.find((department) => department.id === idDepartment);
     return department;
   };
   const removeMovement = (id) => {
@@ -93,6 +93,7 @@ export const CrearTransferencias = () => {
     setTransfers(newTransfers);
   };
   const createAllTransfers = async () => {
+    setLoading(true);
     try {
       const transfersWithOutId = transfers.map((transfer) => {
         return {
@@ -114,10 +115,7 @@ export const CrearTransferencias = () => {
             variables: {
               getTransfersByDepartmentInput2: {
                 id: parseInt(departmentTo),
-                type:
-                  returnBarraInfo(departmentTo).type === 'warehouse'
-                    ? 'RETURN'
-                    : 'STOCK',
+                type: returnBarraInfo(departmentTo).type === 'warehouse' ? 'RETURN' : 'STOCK',
               },
             },
           },
@@ -129,6 +127,7 @@ export const CrearTransferencias = () => {
           content: 'Transferencias Creadas',
         });
         history.push('/transferencias');
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -136,6 +135,7 @@ export const CrearTransferencias = () => {
         title: 'Error',
         content: error,
       });
+      setLoading(false);
     }
   };
 
@@ -199,9 +199,7 @@ export const CrearTransferencias = () => {
               </Form.Item>
               <Form.Item
                 label='Producto'
-                rules={[
-                  { required: true, message: 'El producto es requerido' },
-                ]}
+                rules={[{ required: true, message: 'El producto es requerido' }]}
               >
                 <Autocomplete
                   data={productsArray}
@@ -214,9 +212,7 @@ export const CrearTransferencias = () => {
               <Form.Item
                 label='Cantidad'
                 name='amount'
-                rules={[
-                  { required: true, message: 'La cantidad es requerida' },
-                ]}
+                rules={[{ required: true, message: 'La cantidad es requerida' }]}
               >
                 <CustomInput />
               </Form.Item>
@@ -224,9 +220,7 @@ export const CrearTransferencias = () => {
               <Form.Item>
                 <CustomButton
                   htmlType='submit'
-                  disabled={
-                    !departmentFrom || !departmentTo || !dateValue || !productId
-                  }
+                  disabled={!departmentFrom || !departmentTo || !dateValue || !productId}
                 >
                   Agregar Transferencia
                 </CustomButton>
@@ -240,10 +234,10 @@ export const CrearTransferencias = () => {
           style={{
             marginTop: '3rem',
           }}
-          disabled={!transfers.length}
+          disabled={!transfers.length || loading}
           onClick={createAllTransfers}
         >
-          Crear Transferencias
+          {loading ? <LoadingIndicator /> : <>Crear Transferencias</>}
         </CustomButton>
       </Row>
     </Container>

@@ -25,6 +25,7 @@ import { generateUUID } from '../../utils/generateUUID';
 import { CREATE_MOVEMENT } from '../../Api/Mutations';
 
 import './Movements.css';
+import { LoadingIndicator } from '../LoadingSpinner/LoadingSpinner';
 const { Option } = CustomSelect;
 
 export const CreateMovement = ({ isSale }) => {
@@ -36,6 +37,7 @@ export const CreateMovement = ({ isSale }) => {
   const [movements, setMovements] = useState([]);
   const [saleTypes, setSaleTypes] = useState(null);
   const [amountTotal, setAmountTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [form] = Form.useForm();
 
@@ -100,8 +102,8 @@ export const CreateMovement = ({ isSale }) => {
     setMovements(newMovements);
   };
 
-  const calculateTotalUseCallback = useCallback(() => {
-    if (productId && amountTotal) {
+  const calculateTotalForSaleUseCallback = useCallback(() => {
+    if (productId && amountTotal && saleTypes) {
       const product = returnProductInfo(productId);
       const total =
         parseInt(
@@ -115,13 +117,26 @@ export const CreateMovement = ({ isSale }) => {
         ) * parseInt(amountTotal);
       form.setFieldsValue({ total });
     }
+  }, [amountTotal, productId, saleTypes]);
+
+  const calculateTotalForPurchaseUseCallback = useCallback(() => {
+    if (productId && amountTotal) {
+      const product = returnProductInfo(productId);
+      const total = parseInt(product.factoryPrice) * parseInt(amountTotal);
+      form.setFieldsValue({ total });
+    }
   }, [amountTotal, productId]);
 
   useEffect(() => {
-    calculateTotalUseCallback();
-  }, [calculateTotalUseCallback]);
+    if (isSale) {
+      calculateTotalForSaleUseCallback();
+    } else {
+      calculateTotalForPurchaseUseCallback();
+    }
+  }, [calculateTotalForSaleUseCallback, isSale]);
 
   const createAllMovements = async () => {
+    setLoading(true);
     try {
       const movementWithOutId = movements.map((movement) => {
         return {
@@ -155,12 +170,14 @@ export const CreateMovement = ({ isSale }) => {
           content: 'Movimientos Creado',
         });
         history.push(isSale ? '/ventas' : '/gastos');
+        setLoading(false);
       }
     } catch (error) {
       Modal.error({
         title: 'Error',
         content: error,
       });
+      setLoading(false);
     }
   };
 
@@ -280,9 +297,9 @@ export const CreateMovement = ({ isSale }) => {
             marginTop: '3rem',
           }}
           onClick={createAllMovements}
-          disabled={!movements.length}
+          disabled={!movements.length || loading}
         >
-          {isSale ? 'Crear ventas' : 'Crear gastos'}
+          {loading ? <LoadingIndicator /> : <>{isSale ? 'Crear venta' : 'Crear gasto'}</>}
         </CustomButton>
       </Row>
     </Container>
