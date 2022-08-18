@@ -13,3 +13,17 @@ body {
 code {
   font-family: 'Roboto', sans-serif;
 }
+
+.error-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.error-screen .ant-result-title,
+.error-screen .ant-result-subtitle {
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  font-weight: normal;
+}

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { CreateMovement } from '../Components/CreateMovement/CreateMovement';
+import ErrorBoundary from '../Components/ErrorBoundary';
 import { Navbar } from '../Components/Navbar/Navbar';
 import GlobalStyle from '../globalStyles';
 import { Barras } from '../Pages/Barras/Barras';
@@ -19,6 +20,7 @@ export const AppRouter = () => {
       <GlobalStyle />
       <Navbar />
       <Switch>
+      <ErrorBoundary> 
         <Route exact path='/' component={Home} />
         <Route path='/productos' component={Productos} />
         <Route path='/barras' component={Barras} />
@@ -37,6 +39,7 @@ export const AppRouter = () => {
         <Route exact path='/transferencias' component={Transferencias} />
         <Route path='/transferencias/crear' component={CrearTransferencias} />
         <Route path='/reporte' component={Reportes} />
+        </ErrorBoundary>
       </Switch>
     </Router>
   );
