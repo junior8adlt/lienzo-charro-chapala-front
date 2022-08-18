@@ -12,6 +12,10 @@ export const CardTitle = styled.h3`
   color: #000;
   margin-bottom: 0.5rem;
   text-align: center;
+
+  @media screen and (max-width: 1400px) {
+    font-size: 16px;
+  }
 `;
 
 export const CardContent = styled.p`
@@ -24,4 +28,7 @@ export const CardContent = styled.p`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media screen and (max-width: 1400px) {
+    font-size: 16px;
+  }
 `;

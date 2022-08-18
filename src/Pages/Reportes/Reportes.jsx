@@ -82,6 +82,14 @@ export const Reportes = () => {
     return commissionAmount;
   };
 
+  const productThatHasToReturn = (metrics) => {
+    if (metrics) {
+      const { totalAmountProductTransfered, totalAmountSaleProduct, totalFreeAmountSaleProduct } =
+        metrics;
+      return totalAmountProductTransfered - totalAmountSaleProduct - totalFreeAmountSaleProduct;
+    }
+  };
+
   return (
     <Container>
       <Header>
@@ -119,68 +127,75 @@ export const Reportes = () => {
                 <Subtitle>Métricas Barra {departmentName(departmentId)}:</Subtitle>
               </Col>
               <Row gutter={[16, 16]} style={{ width: '100%' }}>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Producto Entregado</CardTitle>
                     <CardContent>{report.metrics.totalAmountProductTransfered}</CardContent>
                   </Card>
                 </Col>
 
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
-                  <Card>
-                    <CardTitle>Producto Que Regreso</CardTitle>
-                    <CardContent>{report.metrics.totalProductAmountToReturn}</CardContent>
-                  </Card>
-                </Col>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Producto Vendido</CardTitle>
                     <CardContent>{report.metrics.totalAmountSaleProduct}</CardContent>
                   </Card>
                 </Col>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Venta Total Del Producto</CardTitle>
                     <CardContent>${report.metrics.totalSale}</CardContent>
                   </Card>
                 </Col>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Comisión Para La Barra</CardTitle>
                     <CardContent>${report.metrics.totalSaleCommission}</CardContent>
                   </Card>
                 </Col>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Cortesías</CardTitle>
                     <CardContent>{totalCommissionAmount(report.movements)}</CardContent>
                   </Card>
                 </Col>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
-                    <CardTitle>Total de cortesías</CardTitle>
+                    <CardTitle>Total De Cortesías</CardTitle>
                     <CardContent>${totalCommission(report.movements)}</CardContent>
                   </Card>
                 </Col>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
-                    <CardTitle>Total a entregar</CardTitle>
+                    <CardTitle>Total A Entregar</CardTitle>
                     <CardContent>${report.metrics.wareHouseTotalFinal}</CardContent>
                   </Card>
                 </Col>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Producto Regalado</CardTitle>
                     <CardContent>{report.metrics.totalFreeAmountSaleProduct}</CardContent>
                   </Card>
                 </Col>
-                <Col md={6} lg={6} xl={6} sm={24} xs={24}>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Total Producto Regalado</CardTitle>
                     <CardContent>${report.metrics.totalFreeSale}</CardContent>
                   </Card>
                 </Col>
-              </Row>{' '}
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Producto Que Debió Regresar</CardTitle>
+                    <CardContent>{productThatHasToReturn(report.metrics)}</CardContent>
+                  </Card>
+                </Col>
+                <Col md={8} lg={8} xl={6} sm={24} xs={24}>
+                  <Card>
+                    <CardTitle>Producto Que Regreso</CardTitle>
+                    <CardContent>{report.metrics.totalProductAmountToReturn}</CardContent>
+                  </Card>
+                </Col>
+              </Row>
+
               <Row gutter={[16, 16]} style={{ width: '100%', marginTop: '2rem' }}>
                 <>
                   <Col span={24}>
