@@ -137,6 +137,7 @@ export const TransferenciasTable = ({
         pagination={{ pageSize: 10 }}
         rowKey='id'
         locale={{ emptyText: 'No se encontraron transferencias' }}
+        mobileBreakPoint={768}
       />
     </>
   );
