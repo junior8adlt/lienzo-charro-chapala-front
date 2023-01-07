@@ -55,9 +55,25 @@ export const InventarioInfo = () => {
         },
       });
       if (data.getSalesTotalByAllTheShops) {
-        const total = data.getSalesTotalByAllTheShops.reduce((acc, curr) => {
+        const comissions = [];
+        data.getSalesTotalByAllTheShops.forEach((item) => {
+          if (item.saleType === 'GENERAL') {
+            const amount = item.amount;
+            const commision = item.product.comission;
+            const total = +amount * +commision;
+            comissions.push(total);
+          }
+        });
+
+        const totalComissions = comissions.reduce((acc, curr) => {
+          return acc + curr;
+        }, 0);
+
+        const totalSales = data.getSalesTotalByAllTheShops.reduce((acc, curr) => {
           return acc + +curr.total;
         }, 0);
+
+        const total = totalSales - totalComissions;
         setTotalSales(total);
         setShowTotals(true);
         setLoading(false);

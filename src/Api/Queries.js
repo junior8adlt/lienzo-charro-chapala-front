@@ -263,6 +263,9 @@ export const GET_SALES_OF_ALL_SHOPS = gql`
         id
         name
       }
+      product {
+        comission
+      }
       date
     }
   }
