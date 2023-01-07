@@ -82,12 +82,11 @@ export const Reportes = () => {
     return commissionAmount;
   };
 
-  const productThatHasToReturn = (metrics) => {
-    if (metrics) {
-      const { totalAmountProductTransfered, totalAmountSaleProduct, totalFreeAmountSaleProduct } =
-        metrics;
-      return totalAmountProductTransfered - totalAmountSaleProduct - totalFreeAmountSaleProduct;
-    }
+  const productsThatReturns = (transfers) => {
+    const totalReturn = transfers.reduce((acc, transfer) => {
+      return acc + transfer.amount;
+    }, 0);
+    return totalReturn;
   };
 
   return (
@@ -185,13 +184,13 @@ export const Reportes = () => {
                 <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Producto Que Debió Regresar</CardTitle>
-                    <CardContent>{productThatHasToReturn(report.metrics)}</CardContent>
+                    <CardContent>{report.metrics.totalProductAmountToReturn}</CardContent>
                   </Card>
                 </Col>
                 <Col md={8} lg={8} xl={6} sm={24} xs={24}>
                   <Card>
                     <CardTitle>Producto Que Regreso</CardTitle>
-                    <CardContent>{report.metrics.totalProductAmountToReturn}</CardContent>
+                    <CardContent>{productsThatReturns(report?.transfers['returned'])}</CardContent>
                   </Card>
                 </Col>
               </Row>

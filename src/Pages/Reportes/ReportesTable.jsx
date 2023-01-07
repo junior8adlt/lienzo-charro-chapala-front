@@ -31,6 +31,16 @@ export const ReportesTable = ({ movements, transfers }) => {
       key: 'sales',
     },
     {
+      title: 'Cortesia',
+      dataIndex: 'courtesy',
+      key: 'courtesy',
+    },
+    {
+      title: 'Gratis',
+      dataIndex: 'free',
+      key: 'free',
+    },
+    {
       title: 'Regreso',
       dataIndex: 'returns',
       key: 'returns',
@@ -56,15 +66,34 @@ export const ReportesTable = ({ movements, transfers }) => {
       } else {
         newElement.returns = 0;
       }
-      const found2 = movement.find((item) => +item.product.id === +element.product.id);
-      if (found2) {
-        newElement.name = element.product.name;
-        newElement.takes = element.amount;
-        newElement.sales = found2.amount;
-        newElement.totalSales = found2.total;
+      const productSalesAmoun = movement.find(
+        (item) => +item.product.id === +element.product.id && item.saleType === 'GENERAL',
+      );
+      const productFreeAmount = movement.find(
+        (item) => +item.product.id === +element.product.id && item.saleType === 'GRATIS',
+      );
+      const productCourtesyAmount = movement.find(
+        (item) => +item.product.id === +element.product.id && item.saleType === 'CORTESIA',
+      );
+      newElement.name = element.product.name;
+      newElement.takes = element.amount;
+      if (productSalesAmoun) {
+        newElement.sales = productSalesAmoun.amount;
+        newElement.totalSales = productSalesAmoun.total;
       } else {
         newElement.sales = 0;
       }
+      if (productFreeAmount) {
+        newElement.free = productFreeAmount.amount;
+      } else {
+        newElement.free = 0;
+      }
+      if (productCourtesyAmount) {
+        newElement.courtesy = productCourtesyAmount.amount;
+      } else {
+        newElement.courtesy = 0;
+      }
+
       reportData.push(newElement);
     }
     return reportData;
