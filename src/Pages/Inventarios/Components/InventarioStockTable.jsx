@@ -44,7 +44,11 @@ export const InventarioStockTable = () => {
   }
   const onSearch = (value) => {
     setSearchValue(value);
-    setProducts(originalProducts.filter((product) => product.name.includes(value)));
+    setProducts(
+      originalProducts.filter((product) =>
+        product.name.toLowerCase().includes(value.toLowerCase()),
+      ),
+    );
   };
 
   return (
