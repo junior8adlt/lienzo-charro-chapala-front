@@ -46,6 +46,11 @@ export const ReportesTable = ({ movements, transfers }) => {
       key: 'returns',
     },
     {
+      title: 'No regreso',
+      dataIndex: 'notReturned',
+      key: 'notReturned',
+    },
+    {
       title: 'Total Vendido',
       dataIndex: 'totalSales',
       key: 'totalSales',
@@ -66,7 +71,7 @@ export const ReportesTable = ({ movements, transfers }) => {
       } else {
         newElement.returns = 0;
       }
-      const productSalesAmoun = movement.find(
+      const productSalesAmount = movement.find(
         (item) => +item.product.id === +element.product.id && item.saleType === 'GENERAL',
       );
       const productFreeAmount = movement.find(
@@ -75,11 +80,12 @@ export const ReportesTable = ({ movements, transfers }) => {
       const productCourtesyAmount = movement.find(
         (item) => +item.product.id === +element.product.id && item.saleType === 'CORTESIA',
       );
+
       newElement.name = element.product.name;
       newElement.takes = element.amount;
-      if (productSalesAmoun) {
-        newElement.sales = productSalesAmoun.amount;
-        newElement.totalSales = productSalesAmoun.total;
+      if (productSalesAmount) {
+        newElement.sales = productSalesAmount.amount;
+        newElement.totalSales = productSalesAmount.total;
       } else {
         newElement.sales = 0;
       }
@@ -93,6 +99,12 @@ export const ReportesTable = ({ movements, transfers }) => {
       } else {
         newElement.courtesy = 0;
       }
+      newElement.notReturned =
+        element.amount -
+        (productSalesAmount ? productSalesAmount.amount : 0) -
+        (productFreeAmount ? productFreeAmount.amount : 0) -
+        (productCourtesyAmount ? productCourtesyAmount.amount : 0) -
+        (found ? found.amount : 0);
 
       reportData.push(newElement);
     }
