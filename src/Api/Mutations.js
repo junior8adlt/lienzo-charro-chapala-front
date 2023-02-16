@@ -47,10 +47,7 @@ export const CREATE_DEPARTMENT = gql`
 `;
 
 export const UPDATE_DEPARTMENT = gql`
-  mutation UpdateDepartment(
-    $updateDepartmentId: Int
-    $input: updateDepartmentInput
-  ) {
+  mutation UpdateDepartment($updateDepartmentId: Int, $input: updateDepartmentInput) {
     updateDepartment(id: $updateDepartmentId, input: $input) {
       id
       name
@@ -109,10 +106,7 @@ export const CREATE_TRANSFER = gql`
   }
 `;
 export const UPDATE_TRANSFER = gql`
-  mutation UpdateTransfer(
-    $updateTransferId: Int!
-    $input: updateTransferInput
-  ) {
+  mutation UpdateTransfer($updateTransferId: Int!, $input: updateTransferInput) {
     updateTransfer(id: $updateTransferId, input: $input) {
       id
       description
@@ -133,6 +127,39 @@ export const DELETE_TRANSFER = gql`
       departmentIdTo
       productId
       amount
+    }
+  }
+`;
+
+export const CREATE_BILL = gql`
+  mutation CreateBill($input: BillInput) {
+    createBill(input: $input) {
+      description
+      id
+      total
+      date
+    }
+  }
+`;
+
+export const UPDATE_BILL = gql`
+  mutation UpdateBill($updateBillId: Int, $input: updateBillInput) {
+    updateBill(id: $updateBillId, input: $input) {
+      date
+      description
+      id
+      total
+    }
+  }
+`;
+
+export const DELETE_BILL = gql`
+  mutation DeleteBill($deleteBillId: Int) {
+    deleteBill(id: $deleteBillId) {
+      id
+      description
+      total
+      date
     }
   }
 `;

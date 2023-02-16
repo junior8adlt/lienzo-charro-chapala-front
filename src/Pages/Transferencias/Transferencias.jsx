@@ -3,10 +3,7 @@ import { Modal } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DELETE_TRANSFER } from '../../Api/Mutations';
-import {
-  GET_ALL_DEPARTMENTS,
-  GET_TRANSFERS_BY_DEPARTMENT_AND_TYPE,
-} from '../../Api/Queries';
+import { GET_ALL_DEPARTMENTS, GET_TRANSFERS_BY_DEPARTMENT_AND_TYPE } from '../../Api/Queries';
 import { Autocomplete } from '../../Components/Autocomplete/Autocomplete';
 import {
   Container,
@@ -55,7 +52,6 @@ export const Transferencias = () => {
   };
 
   const deleteAction = async (transfer) => {
-    console.log(transfer);
     try {
       const { data } = await deleteTransfer({
         variables: {
@@ -67,10 +63,7 @@ export const Transferencias = () => {
             variables: {
               getTransfersByDepartmentInput2: {
                 id: parseInt(departmentId),
-                type:
-                  returnBarraInfo(departmentId).type === 'warehouse'
-                    ? 'RETURN'
-                    : 'STOCK',
+                type: returnBarraInfo(departmentId).type === 'warehouse' ? 'RETURN' : 'STOCK',
               },
             },
           },
@@ -81,9 +74,7 @@ export const Transferencias = () => {
           content: 'Transferencia Eliminada',
         });
         // remove delete transfer
-        const newTransfers = transfers.filter(
-          (item) => item.id !== transfer.id
-        );
+        const newTransfers = transfers.filter((item) => item.id !== transfer.id);
         setTransfers(newTransfers);
         setOriginalTransfers(newTransfers);
       }
@@ -114,9 +105,7 @@ export const Transferencias = () => {
   };
 
   const returnBarraInfo = (idDepartment) => {
-    const department = departments.find(
-      (department) => department.id === idDepartment
-    );
+    const department = departments.find((department) => department.id === idDepartment);
     return department;
   };
 

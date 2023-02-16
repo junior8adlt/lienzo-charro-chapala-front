@@ -18,6 +18,9 @@ export const Navbar = () => {
       <NavLink to='/gastos' activeStyle onClick={onClickNavLink}>
         Gastos
       </NavLink>
+      <NavLink to='/bills' activeStyle onClick={onClickNavLink}>
+        Bills
+      </NavLink>
       <NavLink to='/productos' activeStyle onClick={onClickNavLink}>
         Productos
       </NavLink>

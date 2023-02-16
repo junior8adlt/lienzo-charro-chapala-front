@@ -270,3 +270,14 @@ export const GET_SALES_OF_ALL_SHOPS = gql`
     }
   }
 `;
+
+export const GET_BILLS = gql`
+  query GetBills {
+    getBills {
+      description
+      id
+      total
+      date
+    }
+  }
+`;
